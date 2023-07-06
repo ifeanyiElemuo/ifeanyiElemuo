@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Geonames API Task | Ifeanyi Elemuo</title>
+    <meta name="description" content="AJAX/PHP/CURL/JSON task" />
+    <meta name="author" content="Ifeanyi Elemuo" />
+  </head>
+
+  <body>
+    <div class="header"></div>
+
+    <div class="main">
+      <div id="table">
+        <table>
+          <thead>
+            <tr>
+              <th>API Name</th>
+              <th colspan="2">
+                API Description <br />
+                <span id="description">Enter values for latitude and longitude</span>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td id="ocean">Ocean</td>
+              <td>
+                <input id="ocnLat" type="number" placeholder="lat" />
+                <input id="ocnLng" type="number" placeholder="lng" />
+              </td>
+              <td>
+                <button id="ocnSubmit">Submit</button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td id="timezone">Timezone</td>
+              <td>
+                <input id="tzLat" type="number" placeholder="lat" />
+                <input id="tzLng" type="number" placeholder="lng" />
+              </td>
+              <td>
+                <button id="tzSubmit">Submit</button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td id="findNearbyPlace">Find Nearby Place</td>
+              <td>
+                <input id="fnpLat" type="number" placeholder="lat" />
+                <input id="fnpLng" type="number" placeholder="lng" />
+              </td>
+              <td>
+                <button id="fnpSubmit">Submit</button>
+              </td>
+            </tr>
+
+            <tr>
+                <td id="results" colspan="3">
+                    <h1>Results</h1>
+                </td>
+            </tr>
+
+            <!-- Ocean results -->
+            <tr>
+                <td>
+                  <h3>Ocean:</h3>
+                </td>
+                <tr>
+                    <td>Name:</td>
+                    <td id="oceanName"></td>
+                </tr>
+                <tr>
+                    <td>Geoname ID:</td>
+                    <td id="geonameId"></td>
+                </tr>
+            </tr>
+            
+            <!-- Timezone results -->
+            <tr>
+                <td>
+                  <h3>Timezone:</h3>
+                </td>
+                <tr>
+                  <td>Timezone ID:</td>
+                  <td id="timezoneId"></td>
+                </tr>
+                <tr>
+                  <td>Country:</td>
+                  <td id="tzCountryName"></td>
+                </tr>
+                <tr>
+                  <td>Country code:</td>
+                  <td id="countryCode"></td>
+                </tr>
+                <tr>
+                    <td>Time:</td>
+                    <td id="time"></td>
+                </tr>
+                <tr>
+                    <td>Sunrise:</td>
+                    <td id="sunrise"></td>
+                </tr>
+                <tr>
+                    <td>Sunset:</td>
+                    <td id="sunset"></td>
+                </tr>
+            </tr>
+
+            <!-- Nearby Place results -->
+            <tr>
+                <td>
+                    <h3>Nearby place</h3>
+                </td>
+                <tr>
+                  <td>Name:</td>
+                  <td id="nearbyPlace"></td>
+                </tr>
+                <tr>
+                    <td>Country:</td>
+                    <td id="fnpCountryName"></td>
+                </tr>
+                <tr>
+                    <td>Distance:</td>
+                    <td id="fnpDistance"></td>
+                </tr>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="preloader"></div>
+    <script type="application/javascript" src="libs/js/jquery-3.7.0.min.js"></script>
+    <script type="application/javascript" src="libs/js/script.js"></script>
+  </body>
+</html>
