@@ -9,7 +9,7 @@
     
     foreach($jsonData['features'] as $feature) {
         $countryName = $feature["properties"]["name"];
-		$countryCode = $feature["properties"]["iso_a3"];
+		$countryCode = $feature["properties"]["iso_a2"];
         $countriesData[$countryName] = $countryCode;
     }
 

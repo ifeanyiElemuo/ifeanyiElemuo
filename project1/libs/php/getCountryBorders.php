@@ -1,11 +1,16 @@
 <?php
-    $countryData = file_get_contents("../../data/countryBorders.geo.json", true);
-    $jsonData = json_decode($countryData);
+    ini_set('display_errors', 'On');
+    error_reporting(E_ALL);
+    $executionStartTime = microtime(true);
+
+    $countryData = file_get_contents("../data/countryBorders.geo.json", true);
+    $jsonData = json_decode($countryData, true);
     $countryBorders = [];
 
     foreach ($jsonData["features"] as $feature) {
-        $countryCode = $feature["properties"]["iso_a3"];
-        
+        $countryCode = $feature["properties"]["iso_a2"];
+        $coordinates = $feature["geometry"]["coordinates"];
+        $countryBorders[$countryCode] = $coordinates;
     }
     
     $output['status']['code'] = "200";
