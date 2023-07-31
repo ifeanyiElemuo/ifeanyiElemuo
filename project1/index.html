@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="libs/css/bootstrap.min.css" />
     <link rel="stylesheet" href="libs/css/style.css" />
     <link rel="stylesheet" href="libs/css/leaflet.css" />
+    <link rel="stylesheet" href="libs/css/easy-button.css" />
+    <link rel="stylesheet" href="libs/css/fontawesome.min.css" />
   </head>
 
   <body>
@@ -20,9 +22,180 @@
 
     <div id="map"></div>
 
+    <!-- country info modal -->
+    <div id="info" class="modal" data-bs-backdrop="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title">Country Info</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-striped">
+              <tr>
+                <td class="text-center">
+                  <i class="fa-solid fa-question fa-xl text-success"></i>
+                </td>
+
+                <td>Country</td>
+
+                <td id="country" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="text-center">
+                  <i class="fa-solid fa-question fa-xl text-success"></i>
+                </td>
+
+                <td>Capital</td>
+
+                <td id="capital" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="text-center">
+                  <i class="fa-solid fa-heart fa-xl text-success"></i>
+                </td>
+
+                <td>Population</td>
+
+                <td id="population" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="text-center">
+                  <i class="fa-solid fa-car fa-xl text-success"></i>
+                </td>
+
+                <td>Area(SqKm)</td>
+
+                <td id="area" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="text-center">
+                  <i class="fa-solid fa-book fa-xl text-success"></i>
+                </td>
+
+                <td>Continent</td>
+
+                <td id="continent" class="text-end"></td>
+              </tr>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-success btn-sm"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- country wiki modal -->
+    <div id="wiki" class="modal" data-bs-backdrop="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title">Wikipedia</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-success btn-sm"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- country weather modal -->
+    <div id="weather" class="modal" data-bs-backdrop="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title">Weather Report</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-success btn-sm"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- country currency modal -->
+    <div id="currency" class="modal" data-bs-backdrop="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title">Currency</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-success btn-sm"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="libs/js/jquery-3.7.0.min.js" type="application/javascript"></script>
+    <script
+      src="libs/js/jquery-3.7.0.min.js"
+      type="application/javascript"
+    ></script>
+    <script
+      src="libs/js/bootstrap.min.js"
+      type="application/javascript"
+    ></script>
     <script src="libs/js/leaflet.js" type="application/javascript"></script>
+    <script src="libs/js/easy-button.js" type="application/javascript"></script>
     <script src="libs/js/script.js" type="application/javascript"></script>
+    <!-- <script src="libs/js/fontawesome.min.js" type="application/javascript"></script> -->
   </body>
 </html>
