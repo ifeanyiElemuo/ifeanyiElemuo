@@ -5,12 +5,15 @@
 
     $countryData = file_get_contents("../data/countryBorders.geo.json", true);
     $jsonData = json_decode($countryData, true);
-    $countryBorders = [];
+    $countryCode = $_GET["selectCountryId"];
+    $countryBorders = "";
 
     foreach ($jsonData["features"] as $feature) {
-        $countryCode = $feature["properties"]["iso_a2"];
-        $coordinates = $feature["geometry"]["coordinates"];
-        $countryBorders[$countryCode] = $coordinates;
+        $country_Code = $feature["properties"]["iso_a2"];
+        $geometry = $feature["geometry"];
+        if ($country_Code === $countryCode) {
+            $countryBorders = $geometry;
+        }
     }
     
     $output['status']['code'] = "200";

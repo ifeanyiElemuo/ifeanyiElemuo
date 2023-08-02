@@ -1,18 +1,21 @@
+//add tile and map
+const tile = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution:
+    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+});
+
+const map = L.map("map", {
+  layers: [tile],
+}).fitWorld();
+
 $(window).on("load", function () {
-  //add tile and map
-  const tile = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  });
-
-  const map = L.map("map", {
-    layers: [tile],
-  }).fitWorld();
-
-  const countryInfo = L.easyButton("fa-solid fa-circle-info", function (btn, map) {
-    $("#info").modal("show");
-  }).addTo(map);
+  const countryInfo = L.easyButton(
+    "fa-solid fa-circle-info",
+    function (btn, map) {
+      $("#info").modal("show");
+    }
+  ).addTo(map);
 
   const countryWiki = L.easyButton("fa-solid fa-globe", function (btn, map) {
     $("#wiki").modal("show");
@@ -44,7 +47,7 @@ $(window).on("load", function () {
   // remove existing layers
   function clearLayers() {
     map.eachLayer(function (layer) {
-      if (layer instanceof L.Polygon) {
+      if (layer instanceof L.geoJSON) {
         map.removeLayer(layer);
       }
     });
@@ -57,26 +60,9 @@ $(window).on("load", function () {
     clearLayers();
     const index = countrySelect.selectedIndex;
     const selectCountry = countrySelect.options[index];
-    let selectCountryId = selectCountry.id;
-    // highlight country borders
-    $.ajax({
-      url: "./libs/php/getCountryBorders.php",
-      type: "GET",
-      dataType: "json",
-      success: ({ status, data }) => {
-        if (status.name === "ok") {
-          // console.log(data)
-          const coords = data[selectCountryId];
-          // reverse array of latitude and longitutde values to display borders correctly
-          const latlngs = latlngsReverse(coords);
-          const polygon = L.polygon(latlngs, { color: "purple" }).addTo(map);
-          map.fitBounds(polygon.getBounds());
-        }
-      },
-      error: (jqXHR) => {
-        console.log(jqXHR.responseText);
-      },
-    });
+    let selectCountryId = selectCountry.value;
+    
+    highlightBorders(selectCountryId);
 
     // country info modal
     $.ajax({
@@ -86,27 +72,48 @@ $(window).on("load", function () {
       data: { selectCountryId },
       success: ({ status, data }) => {
         if (status.name === "ok") {
-          // console.log(data)
+          console.log(data);
           $("#country").html(data["geonames"][0]["countryName"]);
           $("#capital").html(data["geonames"][0]["capital"]);
           $("#population").html(data["geonames"][0]["population"]);
           $("#area").html(data["geonames"][0]["areaInSqKm"]);
           $("#continent").html(data["geonames"][0]["continentName"]);
         }
+
+        let countryName = encodeURI(data["geonames"][0]["countryName"]);
+        console.log(countryName);
+        // console.log(geonameId);
+        // let north = data["geonames"][0]["north"];
+        // let south = data["geonames"][0]["south"];
+        // let east = data["geonames"][0]["east"];
+        // let west = data["geonames"][0]["west"];
+
         // wikipedia modal
-        let countryName = data["geonames"][0]["countryName"];
         $.ajax({
           url: "./libs/php/getCountryWiki.php",
           type: "GET",
           dataType: "json",
           data: { countryName },
+          // data: { north, south, east, west },
           success: ({ status, data }) => {
             if (status.name === "ok") {
               console.log(data);
-              
             }
-          }
-        })
+          },
+        });
+        // weather modal
+        // $.ajax({
+        //   url: "./libs/php/getCountryWeather.php",
+        //   type: "GET",
+        //   dataType: "json",
+        //   // data: { countryName },
+        //   data: { north, south, east, west },
+        //   success: ({ status, data }) => {
+        //     if (status.name === "ok") {
+        //       console.log(data);
+        //     }
+        //   },
+        // });
       },
       error: (jqXHR) => {
         console.log(jqXHR.responseText);
@@ -127,7 +134,7 @@ function loadSelectCountries() {
         options.append(
           Object.entries(data)
             .sort()
-            .map(([country, id]) => `<option id="${id}">${country}</option>`)
+            .map(([country, id]) => `<option value="${id}">${country}</option>`)
             .join("")
         );
       }
@@ -150,12 +157,12 @@ function loadUserLocation({ coords: { latitude, longitude } }) {
     data: { latitude, longitude },
     success: ({ status, data }) => {
       if (status.name === "ok") {
-        const countryCode = data.countryCode;
-        // console.log(countryCode);
+        countryCode = data.countryCode;
+        console.log(countryCode);
         let countrySelect = document.getElementById("countrySelect");
         countrySelect.id = countryCode;
         for (let i = 0; i < countrySelect.options.length; i++) {
-          if (countrySelect.options[i].id === countrySelect.id) {
+          if (countrySelect.options[i].value === countrySelect.id) {
             countrySelect.selectedIndex = i;
             return;
           }
@@ -168,6 +175,33 @@ function loadUserLocation({ coords: { latitude, longitude } }) {
     },
   });
 }
+
+// highlight country borders
+function highlightBorders(selectCountryId) {
+  $.ajax({
+    url: "./libs/php/getCountryBorders.php",
+    type: "GET",
+    dataType: "json",
+    data: { selectCountryId },
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        let countryBorders = L.geoJSON(data, {
+          style: () => {
+            return {
+              color: "purple"
+            }
+          }
+        }).addTo(map);
+        map.fitBounds(countryBorders.getBounds());
+      }
+    },
+    error: (jqXHR) => {
+      console.log(jqXHR.responseText);
+    },
+  });
+}
+
 // reverse latitude and longitude array values
 function latlngsReverse(array) {
   if (Array.isArray(array)) {
