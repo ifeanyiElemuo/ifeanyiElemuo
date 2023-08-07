@@ -9,6 +9,8 @@ const map = L.map("map", {
   layers: [tile],
 }).fitWorld();
 
+let countryBorders = L.geoJSON().addTo(map);
+
 $(window).on("load", function () {
   const countryInfo = L.easyButton(
     "fa-solid fa-circle-info",
@@ -35,6 +37,13 @@ $(window).on("load", function () {
     }
   ).addTo(map);
 
+  const countryEconomy = L.easyButton(
+    "fa-solid fa-question",
+    function (btn, map) {
+      $("#economy").modal("show");
+    }
+  ).addTo(map);
+
   loadSelectCountries();
 
   // load user location
@@ -44,35 +53,27 @@ $(window).on("load", function () {
     alert("Device loaction not found!");
   }
 
-  // remove existing layers
-  function clearLayers() {
-    map.eachLayer(function (layer) {
-      if (layer instanceof L.geoJSON) {
-        map.removeLayer(layer);
-      }
-    });
-  }
-
   // on changing selected countries
   let countrySelect = document.getElementById("countrySelect");
   countrySelect.addEventListener("change", () => {
     // remove existing layers
-    clearLayers();
+    countryBorders.clearLayers();
+
     const index = countrySelect.selectedIndex;
     const selectCountry = countrySelect.options[index];
-    let selectCountryId = selectCountry.value;
-    
-    highlightBorders(selectCountryId);
+    let selectCountryVal = selectCountry.value;
+
+    highlightBorders(selectCountryVal);
 
     // country info modal
     $.ajax({
       url: "./libs/php/getCountryInfo.php",
       type: "GET",
       dataType: "json",
-      data: { selectCountryId },
+      data: { selectCountryVal },
       success: ({ status, data }) => {
         if (status.name === "ok") {
-          console.log(data);
+          // console.log(data);
           $("#country").html(data["geonames"][0]["countryName"]);
           $("#capital").html(data["geonames"][0]["capital"]);
           $("#population").html(data["geonames"][0]["population"]);
@@ -81,12 +82,7 @@ $(window).on("load", function () {
         }
 
         let countryName = encodeURI(data["geonames"][0]["countryName"]);
-        console.log(countryName);
-        // console.log(geonameId);
-        // let north = data["geonames"][0]["north"];
-        // let south = data["geonames"][0]["south"];
-        // let east = data["geonames"][0]["east"];
-        // let west = data["geonames"][0]["west"];
+        let iso_a3 = data["geonames"][0]["isoAlpha3"];
 
         // wikipedia modal
         $.ajax({
@@ -94,29 +90,210 @@ $(window).on("load", function () {
           type: "GET",
           dataType: "json",
           data: { countryName },
-          // data: { north, south, east, west },
           success: ({ status, data }) => {
             if (status.name === "ok") {
-              console.log(data);
+              // console.log(data);
+              for (const iterator of data.geonames) {
+                if (iterator["feature"] === "country") {
+                  // console.log(iterator);
+                  const latitude = iterator["lat"];
+                  const longitude = iterator["lng"];
+
+                  // weather modal
+                  $.ajax({
+                    url: "./libs/php/getCountryWeather.php",
+                    type: "GET",
+                    dataType: "json",
+                    data: { latitude, longitude },
+                    success: ({ status, data }) => {
+                      if (status.name === "ok") {
+                        // console.log(data);
+                      }
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    },
+                  });
+
+                  // timezone modal
+                  $.ajax({
+                    url: "./libs/php/getCountryTimezone.php",
+                    type: "GET",
+                    dataType: "json",
+                    data: { latitude, longitude },
+                    success: ({ status, data }) => {
+                      if (status.name === "ok") {
+                        // console.log(data);
+                      }
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    },
+                  });
+                }
+              }
             }
           },
+          error: function (err) {
+            console.log(err);
+          },
         });
-        // weather modal
-        // $.ajax({
-        //   url: "./libs/php/getCountryWeather.php",
-        //   type: "GET",
-        //   dataType: "json",
-        //   // data: { countryName },
-        //   data: { north, south, east, west },
-        //   success: ({ status, data }) => {
-        //     if (status.name === "ok") {
-        //       console.log(data);
-        //     }
-        //   },
-        // });
+
+        // economy modal
+        // on changing selected period
+        let periodSelect = document.getElementById("periodSelect");
+        periodSelect.addEventListener("change", () => {
+          const periodIndex = periodSelect.selectedIndex;
+          const selectPeriod = periodSelect.options[periodIndex];
+          let period = selectPeriod.value;
+
+          // nominal GDP
+          $.ajax({
+            url: "./libs/php/getCountryEconomy/getNominalGdp.php",
+            type: "GET",
+            dataType: "json",
+            data: { iso_a3, period },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                $("#ngdp").html(data);
+              }
+            },
+            error: function (err) {
+              console.log(err);
+              $("#ngdp").html('N/A');
+            },
+          });
+
+          // nominal GDP per capita
+          $.ajax({
+            url: "./libs/php/getCountryEconomy/getNominalGdpPC.php",
+            type: "GET",
+            dataType: "json",
+            data: { iso_a3, period },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                $("#ngdppc").html(data);
+              }
+            },
+            error: function (err) {
+              console.log(err);
+              $("#ngdppc").html('N/A');
+            },
+          });
+
+          // real GDP growth
+          $.ajax({
+            url: "./libs/php/getCountryEconomy/getRealGdpGrowth.php",
+            type: "GET",
+            dataType: "json",
+            data: { iso_a3, period },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                $("#rgdpgr").html(data);
+              }
+            },
+            error: function (err) {
+              console.log(err);
+              $("#rgdpgr").html('N/A');
+            },
+          });
+
+          // inflation rate, CPI
+          $.ajax({
+            url: "./libs/php/getCountryEconomy/getCPI.php",
+            type: "GET",
+            dataType: "json",
+            data: { iso_a3, period },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                $("#ircpi").html(data);
+              }
+            },
+            error: function (err) {
+              console.log(err);
+              $("#ircpi").html('N/A');
+            },
+          });
+
+          // unemployment rate
+          $.ajax({
+            url: "./libs/php/getCountryEconomy/getUnemRate.php",
+            type: "GET",
+            dataType: "json",
+            data: { iso_a3, period },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                $("#unemr").html(data);
+              }
+            },
+            error: function (err) {
+              console.log(err);
+              $("#unemr").html('N/A');
+            },
+          });
+
+          // government revenue
+          $.ajax({
+            url: "./libs/php/getCountryEconomy/getGovtRev.php",
+            type: "GET",
+            dataType: "json",
+            data: { iso_a3, period },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                $("#govtrev").html(data);
+              }
+            },
+            error: function (err) {
+              console.log(err);
+              $("#govtrev").html('N/A');
+            },
+          });
+
+          // government expenditure
+          $.ajax({
+            url: "./libs/php/getCountryEconomy/getGovtExp.php",
+            type: "GET",
+            dataType: "json",
+            data: { iso_a3, period },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                $("#govtexp").html(data);
+              }
+            },
+            error: function (err) {
+              console.log(err);
+              $("#govtexp").html('N/A');
+            },
+          });
+
+          // government debt
+          $.ajax({
+            url: "./libs/php/getCountryEconomy/getGovtDebt.php",
+            type: "GET",
+            dataType: "json",
+            data: { iso_a3, period },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                $("#govtdebt").html(data);
+              }
+            },
+            error: function (err) {
+              console.log(err);
+              $("#govtdebt").html('N/A');
+            },
+          });
+        });
       },
-      error: (jqXHR) => {
-        console.log(jqXHR.responseText);
+      error: function (err) {
+        console.log(err);
       },
     });
   });
@@ -139,8 +316,8 @@ function loadSelectCountries() {
         );
       }
     },
-    error: (jqXHR) => {
-      console.log(jqXHR.responseText);
+    error: function (err) {
+      console.log(err);
     },
   });
 }
@@ -170,42 +347,50 @@ function loadUserLocation({ coords: { latitude, longitude } }) {
         $("#countrySelect").val(countryCode).change();
       }
     },
-    error: (jqXHR) => {
-      console.log(jqXHR.responseText);
+    error: function (err) {
+      console.log(err);
     },
   });
 }
 
 // highlight country borders
-function highlightBorders(selectCountryId) {
+function highlightBorders(selectCountryVal) {
   $.ajax({
     url: "./libs/php/getCountryBorders.php",
     type: "GET",
     dataType: "json",
-    data: { selectCountryId },
+    data: { selectCountryVal },
     success: ({ status, data }) => {
       if (status.name === "ok") {
         // console.log(data);
-        let countryBorders = L.geoJSON(data, {
-          style: () => {
-            return {
-              color: "purple"
-            }
-          }
-        }).addTo(map);
+        countryBorders.addData(data).setStyle(() => {
+          return {
+            color: "purple",
+          };
+        });
         map.fitBounds(countryBorders.getBounds());
       }
     },
-    error: (jqXHR) => {
-      console.log(jqXHR.responseText);
+    error: function (err) {
+      console.log(err);
     },
   });
 }
 
-// reverse latitude and longitude array values
-function latlngsReverse(array) {
-  if (Array.isArray(array)) {
-    return array.map(latlngsReverse).reverse();
-  }
-  return array;
-}
+// function loadEcoIndicators (indicator, iso_a3, period) {
+//   $.ajax({
+//     url: "./libs/php/getCountryEconomy.php",
+//     type: "GET",
+//     dataType: "json",
+//     data: { indicator, iso_a3, period },
+//     success: ({ status, data }) => {
+//       if (status.name === "ok") {
+//         // console.log(data);
+
+//       }
+//     },
+//     error: (jqXHR) => {
+//       console.log(jqXHR.responseText);
+//     },
+//   });
+// }

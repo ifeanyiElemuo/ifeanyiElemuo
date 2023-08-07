@@ -1,6 +1,6 @@
 <?php
 
-	require_once __DIR__ . "../../../../vendor/autoload.php";
+    require_once __DIR__ . "../../../../vendor/autoload.php";
 
 	ini_set('display_errors', 'On');
 	error_reporting(E_ALL);
@@ -8,13 +8,11 @@
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "../../../" );
 	$dotenv->safeLoad();
 
-	$username = $_ENV["APPID"];
+	$username = $_ENV["API_USERNAME"];
 
 	$executionStartTime = microtime(true);
 
-    $url ='https://api.openweathermap.org/data/2.5/weather?lat=' . $_REQUEST['latitude'] . '&lon=' . $_REQUEST['longitude'] . '&appid=' . $username . '&units=metric';
-    // $url='http://api.geonames.org/weatherJSON?formatted=true&north=' . $_REQUEST['north'] . '&south=' . $_REQUEST['south'] . '&east=' . $_REQUEST['east'] . '&west=' . $_REQUEST['west'] . '&username=' . $username .'&style=full';
-
+	$url='http://api.geonames.org/timezoneJSON?formatted=true&lat=' . $_REQUEST['latitude'] . '&lng=' . $_REQUEST['longitude'] . '&username=' . $username .'&style=full';
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

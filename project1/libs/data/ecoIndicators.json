@@ -1,0 +1,73 @@
+{
+    "indicators": {
+        "RGDP_GR": {
+            "code": "NGDP_RPCH",
+            "label": "Real GDP growth",
+            "description": "Gross domestic product is the most commonly used single measure of a country's overall economic activity. It represents the total value at constant prices of final goods and services produced within a country during a specified time period, such as one year.",
+            "source": "World Economic Outlook (April 2023)",
+            "unit": "Annual percent change",
+            "dataset": "WEO"
+        },
+        "NGDP": {
+            "code": "NGDPD",
+            "label": "GDP, current prices",
+            "description": "Gross domestic product is the most commonly used single measure of a country's overall economic activity. It represents the total value at current prices of final goods and services produced within a country during a specified time period, such as one year.",
+            "source": "World Economic Outlook (April 2023)",
+            "unit": "Billions of U.S. dollars",
+            "dataset": "WEO"
+        },
+        "NGDP_PC": {
+            "code": "NGDPDPC",
+            "label": "GDP per capita, current prices",
+            "description": "Gross domestic product is the most commonly used single measure of a country's overall economic activity. It represents the total value at current prices of final goods and services produced within a country during a specified time period divided by the average population for the same one year.",
+            "source": "World Economic Outlook (April 2023)",
+            "unit": "U.S. dollars per capita",
+            "dataset": "WEO"
+        },
+        "IR_CPI": {
+            "code": "PCPIPCH",
+            "label": "Inflation rate, average consumer prices",
+            "description": "The average consumer price index (CPI) is a measure of a country's average level of prices based on the cost of a typical basket of consumer goods and services in a given period. The rate of inflation is the percent change in the average CPI.\n \n",
+            "source": "World Economic Outlook (April 2023)",
+            "unit": "Annual percent change",
+            "dataset": "WEO"
+        },
+        "UnemR": {
+            "code": "LUR",
+            "label": "Unemployment rate",
+            "description": "The number of unemployed persons as a percentage of the total labor force.",
+            "source": "World Economic Outlook (April 2023)",
+            "unit": "Percent",
+            "dataset": "WEO"
+        },
+        "GDebt": {
+            "code": "GGXWDG_NGDP",
+            "label": "General government gross debt",
+            "description": "Gross debt consists of all liabilities that require payment or payments of interest and\/or principal by the debtor to the creditor at a date or dates in the future. This includes debt liabilities in the form of SDRs, currency and deposits, debt securities, loans, insurance, pensions and standardized guarantee schemes, and other accounts payable. Thus, all liabilities in the GFSM 2001 system are debt, except for equity and investment fund shares and financial derivatives and employee stock options. Debt can be valued at current market, nominal, or face values (GFSM 2001, paragraph 7.110).",
+            "source": "World Economic Outlook (April 2023)",
+            "unit": "Percent of GDP",
+            "dataset": "WEO"
+        },
+        "GRev": {
+            "code": "rev",
+            "label": "Government revenue, percent of GDP",
+            "description": "Government revenue, percent of GDP",
+            "source": "Public Finances in Modern History Database (Dec 2022)",
+            "unit": "% of GDP",
+            "dataset": "FPP"
+        },
+        "GExp": {
+            "code": "exp",
+            "label": "Government expenditure, percent of GDP",
+            "description": "Government expenditure, percent of GDP",
+            "source": "Public Finances in Modern History Database (Dec 2022)",
+            "unit": "% of GDP",
+            "dataset": "FPP"
+        }
+        
+    },
+    "api": {
+        "version": "1",
+        "output-method": "json"
+    }
+}

@@ -5,7 +5,7 @@
 
     $countryData = file_get_contents("../data/countryBorders.geo.json", true);
     $jsonData = json_decode($countryData, true);
-    $countryCode = $_GET["selectCountryId"];
+    $countryCode = $_GET["selectCountryVal"];
     $countryBorders = "";
 
     foreach ($jsonData["features"] as $feature) {

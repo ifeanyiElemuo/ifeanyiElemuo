@@ -184,6 +184,97 @@
       </div>
     </div>
 
+    <!-- country economy modal -->
+    <div id="economy" class="modal" data-bs-backdrop="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title">Economic Indicators</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <span id="periodContainer">
+              <select id="periodSelect" class="form-select shadow-sm">
+                <option value="" disabled selected>-- select period</option>
+                <option value="2000">2000</option>
+                <option value="2001">2001</option>
+                <option value="2002">2002</option>
+                <option value="2003">2003</option>
+                <option value="2004">2004</option>
+                <option value="2005">2005</option>
+                <option value="2006">2006</option>
+                <option value="2007">2007</option>
+                <option value="2008">2008</option>
+                <option value="2009">2009</option>
+                <option value="2010">2010</option>
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+                <option value="2015">2015</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+              </select>
+            </span>
+            <table class="table table-striped">
+              <tr>
+                <td>Nominal GDP, billions of USD</td>
+                <td id="ngdp" class="text-end"></td>
+              </tr>
+              <tr>
+                <td>Nominal GDP per capita</td>
+                <td id="ngdppc" class="text-end"></td>
+              </tr>
+              <tr>
+                <td>Real GDP growth</td>
+                <td id="rgdpgr" class="text-end"></td>
+              </tr>
+              <tr>
+                <td>Inflation rate, CPI</td>
+                <td id="ircpi" class="text-end"></td>
+              </tr>
+              <tr>
+                <td>Unemployment rate</td>
+                <td id="unemr" class="text-end"></td>
+              </tr>
+              <tr>
+                <td>Government revenue, % of GDP</td>
+                <td id="govtrev" class="text-end"></td>
+              </tr>
+              <tr>
+                <td>Government expenditure, % of GDP</td>
+                <td id="govtexp" class="text-end"></td>
+              </tr>
+              <tr>
+                <td id="GGXWDG_NGDP">Government debt, % of GDP</td>
+                <td id="govtdebt" class="text-end"></td>
+              </tr>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-success btn-sm"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Scripts -->
     <script
       src="libs/js/jquery-3.7.0.min.js"

@@ -1,20 +1,14 @@
 <?php
 
-	require_once __DIR__ . "../../../../vendor/autoload.php";
-
 	ini_set('display_errors', 'On');
 	error_reporting(E_ALL);
 
-	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "../../../" );
-	$dotenv->safeLoad();
-
-	$username = $_ENV["API_USERNAME"];
-
+	
 	$executionStartTime = microtime(true);
 
-	$url='http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=' . $_REQUEST['countryName'] . '&username=' . $username .'&style=full';
-
-	$ch = curl_init();
+	$url = 'https://www.imf.org/external/datamapper/api/v1/NGDPD/'  . $_REQUEST['iso_a3'] . '?periods=' . $_REQUEST['period'];
+    
+    $ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_URL,$url);
@@ -23,7 +17,11 @@
 
 	curl_close($ch);
 
-	$jsonData = json_decode($result, true);
+	$decode = json_decode($result, true);
+
+	$iso_a3 = $_GET['iso_a3'];
+	$period = $_GET['period'];
+	$jsonData = $decode['values']['NGDPD'][$iso_a3][$period];
 
 	$output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
