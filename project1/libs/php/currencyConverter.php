@@ -2,18 +2,19 @@
 
     require_once __DIR__ . "../../../../vendor/autoload.php";
 
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
+    ini_set('display_errors', 'On');
+    error_reporting(E_ALL);
 
-	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "../../../" );
-	$dotenv->safeLoad();
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "../../../" );
+    $dotenv->safeLoad();
 
-	$username = $_ENV["API_USERNAME"];
+    $access_key = $_ENV["access_key"];
 
-	$executionStartTime = microtime(true);
+    $executionStartTime = microtime(true);
 
-	$url='http://api.geonames.org/timezoneJSON?formatted=true&lat=' . $_REQUEST['latitude'] . '&lng=' . $_REQUEST['longitude'] . '&username=' . $username .'&style=full';
-	$ch = curl_init();
+    $url = 'https://v6.exchangerate-api.com/v6/' . $access_key . '/pair/' . $_REQUEST['fromVal'] . '/' . $_REQUEST['toVal'] . '/' . $_REQUEST['amtVal'];
+    
+    $ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_URL,$url);
@@ -22,7 +23,7 @@
 
 	curl_close($ch);
 
-	$decode = json_decode($result, true);	
+	$decode = json_decode($result, true);
 
 	$output['status']['code'] = "200";
 	$output['status']['name'] = "ok";

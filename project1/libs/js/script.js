@@ -44,7 +44,12 @@ $(window).on("load", function () {
     }
   ).addTo(map);
 
+  const countryNews = L.easyButton("fa-solid fa-question", function (btn, map) {
+    $("#news").modal("show");
+  }).addTo(map);
+
   loadSelectCountries();
+  loadSelectCurrencies();
 
   // load user location
   if (navigator.geolocation) {
@@ -58,12 +63,13 @@ $(window).on("load", function () {
   countrySelect.addEventListener("change", () => {
     // remove existing layers
     countryBorders.clearLayers();
+    clearNewsData();
+    clearEcoData();
 
-    const index = countrySelect.selectedIndex;
-    const selectCountry = countrySelect.options[index];
-    let selectCountryVal = selectCountry.value;
+    let selectCountryVal = countrySelect.value;
 
     highlightBorders(selectCountryVal);
+    getNewsHeadlines(selectCountryVal);
 
     // country info modal
     $.ajax({
@@ -83,6 +89,7 @@ $(window).on("load", function () {
 
         let countryName = encodeURI(data["geonames"][0]["countryName"]);
         let iso_a3 = data["geonames"][0]["isoAlpha3"];
+        let country = data["geonames"][0]["countryName"];
 
         // wikipedia modal
         $.ajax({
@@ -94,11 +101,26 @@ $(window).on("load", function () {
             if (status.name === "ok") {
               // console.log(data);
               for (const iterator of data.geonames) {
-                if (iterator["feature"] === "country") {
+                if (
+                  iterator["feature"] === "country" &&
+                  iterator["title"] === country
+                ) {
                   // console.log(iterator);
+                  $("#thumbnail").html(
+                    "<img src='" +
+                      iterator["thumbnailImg"] +
+                      "' width='100px' height='100px'>"
+                  );
+                  $("#title").html(iterator["title"]);
+                  $("#summary").html(iterator["summary"]);
+                  $("#wikiUrl").html(
+                    "<a href='https://" +
+                      iterator["wikipediaUrl"] +
+                      "' target='_blank'>Read more...</a>"
+                  );
+
                   const latitude = iterator["lat"];
                   const longitude = iterator["lng"];
-
                   // weather modal
                   $.ajax({
                     url: "./libs/php/getCountryWeather.php",
@@ -108,22 +130,17 @@ $(window).on("load", function () {
                     success: ({ status, data }) => {
                       if (status.name === "ok") {
                         // console.log(data);
-                      }
-                    },
-                    error: function (err) {
-                      console.log(err);
-                    },
-                  });
-
-                  // timezone modal
-                  $.ajax({
-                    url: "./libs/php/getCountryTimezone.php",
-                    type: "GET",
-                    dataType: "json",
-                    data: { latitude, longitude },
-                    success: ({ status, data }) => {
-                      if (status.name === "ok") {
-                        // console.log(data);
+                        $("#temp").html(data["main"]["temp"]);
+                        $("#tempMin").html(data["main"]["temp_min"]);
+                        $("#tempMax").html(data["main"]["temp_max"]);
+                        $("#humidity").html(data["main"]["humidity"]);
+                        $("#weatherMain").html(data["weather"][0]["main"]);
+                        $("#weatherDesc").html(
+                          data["weather"][0]["description"]
+                        );
+                        $("#windDeg").html(data["wind"]["deg"]);
+                        $("#windGust").html(data["wind"]["gust"]);
+                        $("#windSpeed").html(data["wind"]["speed"]);
                       }
                     },
                     error: function (err) {
@@ -160,8 +177,8 @@ $(window).on("load", function () {
               }
             },
             error: function (err) {
-              console.log(err);
-              $("#ngdp").html('N/A');
+              console.log(err.responseText);
+              $("#ngdp").html("N/A");
             },
           });
 
@@ -178,8 +195,8 @@ $(window).on("load", function () {
               }
             },
             error: function (err) {
-              console.log(err);
-              $("#ngdppc").html('N/A');
+              console.log(err.responseText);
+              $("#ngdppc").html("N/A");
             },
           });
 
@@ -196,8 +213,8 @@ $(window).on("load", function () {
               }
             },
             error: function (err) {
-              console.log(err);
-              $("#rgdpgr").html('N/A');
+              console.log(err.responseText);
+              $("#rgdpgr").html("N/A");
             },
           });
 
@@ -214,8 +231,8 @@ $(window).on("load", function () {
               }
             },
             error: function (err) {
-              console.log(err);
-              $("#ircpi").html('N/A');
+              console.log(err.responseText);
+              $("#ircpi").html("N/A");
             },
           });
 
@@ -232,8 +249,8 @@ $(window).on("load", function () {
               }
             },
             error: function (err) {
-              console.log(err);
-              $("#unemr").html('N/A');
+              console.log(err.responseText);
+              $("#unemr").html("N/A");
             },
           });
 
@@ -250,8 +267,8 @@ $(window).on("load", function () {
               }
             },
             error: function (err) {
-              console.log(err);
-              $("#govtrev").html('N/A');
+              console.log(err.responseText);
+              $("#govtrev").html("N/A");
             },
           });
 
@@ -268,8 +285,8 @@ $(window).on("load", function () {
               }
             },
             error: function (err) {
-              console.log(err);
-              $("#govtexp").html('N/A');
+              console.log(err.responseText);
+              $("#govtexp").html("N/A");
             },
           });
 
@@ -286,14 +303,42 @@ $(window).on("load", function () {
               }
             },
             error: function (err) {
-              console.log(err);
-              $("#govtdebt").html('N/A');
+              console.log(err.responseText);
+              $("#govtdebt").html("N/A");
             },
           });
         });
       },
       error: function (err) {
-        console.log(err);
+        console.log(err.responseText);
+      },
+    });
+  });
+
+  // currency converter
+  const from = document.getElementById("from");
+  const to = document.getElementById("to");
+  const amount = document.getElementById("amount");
+  const convert = document.getElementById("convert");
+  const result = document.getElementById('result');
+  convert.addEventListener("click", () => {
+    let fromVal = from.value;
+    let toVal = to.value;
+    let amtVal = amount.value;
+    console.log(amtVal);
+    $.ajax({
+      url: "./libs/php/currencyConverter.php",
+      type: "GET",
+      dataType: "json",
+      data: { fromVal, toVal, amtVal },
+      success: ({ status, data }) => {
+        if (status.name === "ok") {
+          console.log(data);
+          $("#result").html(data['conversion_result']);
+        }
+      },
+      error: function (err) {
+        console.log(err.responseText);
       },
     });
   });
@@ -317,7 +362,44 @@ function loadSelectCountries() {
       }
     },
     error: function (err) {
-      console.log(err);
+      console.log(err.responseText);
+    },
+  });
+}
+
+// load currencies to select
+function loadSelectCurrencies() {
+  $.ajax({
+    url: "./libs/php/getCurrencyData.php",
+    type: "GET",
+    dataType: "json",
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        const fromCurr = $("#from");
+        const toCurr = $("#to");
+        fromCurr.append(
+          Object.entries(data.codes)
+            .sort()
+            .map(
+              ([currency, code]) =>
+                `<option value="${code}">${currency}, ${code}</option>`
+            )
+            .join("")
+        );
+        toCurr.append(
+          Object.entries(data.codes)
+            .sort()
+            .map(
+              ([currency, code]) =>
+                `<option value="${code}">${currency}, ${code}</option>`
+            )
+            .join("")
+        );
+      }
+    },
+    error: function (err) {
+      console.log(err.responseText);
     },
   });
 }
@@ -335,7 +417,7 @@ function loadUserLocation({ coords: { latitude, longitude } }) {
     success: ({ status, data }) => {
       if (status.name === "ok") {
         countryCode = data.countryCode;
-        console.log(countryCode);
+        // console.log(countryCode);
         let countrySelect = document.getElementById("countrySelect");
         countrySelect.id = countryCode;
         for (let i = 0; i < countrySelect.options.length; i++) {
@@ -348,7 +430,7 @@ function loadUserLocation({ coords: { latitude, longitude } }) {
       }
     },
     error: function (err) {
-      console.log(err);
+      console.log(err.responseText);
     },
   });
 }
@@ -372,25 +454,50 @@ function highlightBorders(selectCountryVal) {
       }
     },
     error: function (err) {
-      console.log(err);
+      console.log(err.responseText);
     },
   });
 }
 
-// function loadEcoIndicators (indicator, iso_a3, period) {
-//   $.ajax({
-//     url: "./libs/php/getCountryEconomy.php",
-//     type: "GET",
-//     dataType: "json",
-//     data: { indicator, iso_a3, period },
-//     success: ({ status, data }) => {
-//       if (status.name === "ok") {
-//         // console.log(data);
+// news modal function
+function getNewsHeadlines(selectCountryVal) {
+  $.ajax({
+    url: "./libs/php/getCountryNews.php",
+    type: "GET",
+    dataType: "json",
+    data: { selectCountryVal },
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        for (iterator of data.articles) {
+          $("#newsTitle").append(
+            "<div><h5 class='card-title'>" +
+              iterator["title"] +
+              "</h5><a href=" +
+              iterator["url"] +
+              "' target='_blank'>Read more...</a><br><br></div>"
+          );
+        }
+      }
+    },
+    error: function (err) {
+      console.log(err.responseText);
+    },
+  });
+}
 
-//       }
-//     },
-//     error: (jqXHR) => {
-//       console.log(jqXHR.responseText);
-//     },
-//   });
-// }
+// clear country news
+function clearNewsData() {
+  $("#newsTitle").html("");
+}
+
+function clearEcoData() {
+  $("#ngdp").html("");
+  $("#ngdppc").html("");
+  $("#rgdpgr").html("");
+  $("#ircpi").html("");
+  $("#unemr").html("");
+  $("#govtrev").html("");
+  $("#govtexp").html("");
+  $("#govtdebt").html("");
+}

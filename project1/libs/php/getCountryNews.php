@@ -4,17 +4,19 @@
 
 	ini_set('display_errors', 'On');
 	error_reporting(E_ALL);
+    $agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)';
 
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "../../../" );
 	$dotenv->safeLoad();
 
-	$username = $_ENV["APPID"];
+	$apiKey = $_ENV["apiKey"];
 
 	$executionStartTime = microtime(true);
 
-    $url ='https://api.openweathermap.org/data/2.5/weather?lat=' . $_REQUEST['latitude'] . '&lon=' . $_REQUEST['longitude'] . '&appid=' . $username . '&units=metric';
+    $url = 'https://newsapi.org/v2/top-headlines?country='. $_REQUEST['selectCountryVal'] . '&apiKey=' . $apiKey;
 
 	$ch = curl_init();
+    curl_setopt($ch, CURLOPT_USERAGENT, $agent);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_URL,$url);

@@ -38,48 +38,23 @@
           <div class="modal-body">
             <table class="table table-striped">
               <tr>
-                <td class="text-center">
-                  <i class="fa-solid fa-question fa-xl text-success"></i>
-                </td>
-
                 <td>Country</td>
-
                 <td id="country" class="text-end"></td>
               </tr>
               <tr>
-                <td class="text-center">
-                  <i class="fa-solid fa-question fa-xl text-success"></i>
-                </td>
-
                 <td>Capital</td>
-
                 <td id="capital" class="text-end"></td>
               </tr>
               <tr>
-                <td class="text-center">
-                  <i class="fa-solid fa-heart fa-xl text-success"></i>
-                </td>
-
                 <td>Population</td>
-
                 <td id="population" class="text-end"></td>
               </tr>
               <tr>
-                <td class="text-center">
-                  <i class="fa-solid fa-car fa-xl text-success"></i>
-                </td>
-
-                <td>Area(SqKm)</td>
-
+                <td>Area, <em class="small">SqKm</em></td>
                 <td id="area" class="text-end"></td>
               </tr>
               <tr>
-                <td class="text-center">
-                  <i class="fa-solid fa-book fa-xl text-success"></i>
-                </td>
-
                 <td>Continent</td>
-
                 <td id="continent" class="text-end"></td>
               </tr>
             </table>
@@ -111,7 +86,14 @@
             ></button>
           </div>
           <div class="modal-body">
-            
+            <div id="thumbnail"></div>
+            <div>
+              <h6 id="title"></h6>
+              <br />
+              <p id="summary"></p>
+              <br />
+              <p id="wikiUrl"></p>
+            </div>
           </div>
           <div class="modal-footer">
             <button
@@ -140,7 +122,58 @@
             ></button>
           </div>
           <div class="modal-body">
-            
+            <table class="table table-striped">
+              <tr>
+                <td>
+                  <strong>Temperature, </strong><em class="small">celcius</em>
+                </td>
+                <td class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Current</td>
+                <td id="temp" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Min</td>
+                <td id="tempMin" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Max</td>
+                <td id="tempMax" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Humidity</td>
+                <td id="humidity" class="text-end"></td>
+              </tr>
+              <tr>
+                <td><strong>Weather</strong></td>
+                <td class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Current</td>
+                <td id="weatherMain" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Description</td>
+                <td id="weatherDesc" class="text-end"></td>
+              </tr>
+              <tr>
+                <td><strong>Wind</strong></td>
+                <td class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Deg</td>
+                <td id="windDeg" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Gust</td>
+                <td id="windGust" class="text-end"></td>
+              </tr>
+              <tr>
+                <td class="small">Speed</td>
+                <td id="windSpeed" class="text-end"></td>
+              </tr>
+            </table>
           </div>
           <div class="modal-footer">
             <button
@@ -160,7 +193,7 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
           <div class="modal-header bg-success bg-gradient text-white">
-            <h5 class="modal-title">Currency</h5>
+            <h5 class="modal-title">Currency Converter</h5>
             <button
               type="button"
               class="btn-close btn-close-white"
@@ -169,7 +202,16 @@
             ></button>
           </div>
           <div class="modal-body">
-            
+            <form class="form-inline">
+              <div class="d-flex flex-row bg-secondary">
+                <input id="amount" type="number" class="p-2"/>
+                <select id="from" class="p-2"></select>
+              </div>
+              <select id="to"></select><br><br>
+              <button id="convert" class="btn btn-outline-success" type="button">Convert</button><br>
+              <label>Result: </label>
+              <p id="result"></p>
+            </form>
           </div>
           <div class="modal-footer">
             <button
@@ -189,7 +231,7 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
           <div class="modal-header bg-success bg-gradient text-white">
-            <h5 class="modal-title">Economic Indicators</h5>
+            <h5 class="modal-title">Economic Outlook</h5>
             <button
               type="button"
               class="btn-close btn-close-white"
@@ -229,39 +271,64 @@
             </span>
             <table class="table table-striped">
               <tr>
-                <td>Nominal GDP, billions of USD</td>
+                <td>Nominal GDP, <em class="small">billions of USD</em></td>
                 <td id="ngdp" class="text-end"></td>
               </tr>
               <tr>
-                <td>Nominal GDP per capita</td>
+                <td>Nominal GDP per capita, <em class="small">USD</em></td>
                 <td id="ngdppc" class="text-end"></td>
               </tr>
               <tr>
-                <td>Real GDP growth</td>
+                <td>Real GDP growth, <em class="small">% change</em></td>
                 <td id="rgdpgr" class="text-end"></td>
               </tr>
               <tr>
-                <td>Inflation rate, CPI</td>
+                <td>Inflation rate (CPI), <em class="small">% change</em></td>
                 <td id="ircpi" class="text-end"></td>
               </tr>
               <tr>
-                <td>Unemployment rate</td>
+                <td>Unemployment rate, <em class="small">%</em></td>
                 <td id="unemr" class="text-end"></td>
               </tr>
               <tr>
-                <td>Government revenue, % of GDP</td>
+                <td>Government revenue, <em class="small">% of GDP</em></td>
                 <td id="govtrev" class="text-end"></td>
               </tr>
               <tr>
-                <td>Government expenditure, % of GDP</td>
+                <td>Government expenditure, <em class="small">% of GDP</em></td>
                 <td id="govtexp" class="text-end"></td>
               </tr>
               <tr>
-                <td id="GGXWDG_NGDP">Government debt, % of GDP</td>
+                <td id="GGXWDG_NGDP">
+                  Government debt, <em class="small">% of GDP</em>
+                </td>
                 <td id="govtdebt" class="text-end"></td>
               </tr>
             </table>
           </div>
+          <div class="modal-footer">
+            <footer>
+              <em class="small">Source: IMF Datamapper (2023)</em>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- country news modal -->
+    <div id="news" class="modal" data-bs-backdrop="false" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-success bg-gradient text-white">
+            <h5 class="modal-title">Headline News</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div id="newsTitle" class="modal-body"></div>
           <div class="modal-footer">
             <button
               type="button"
