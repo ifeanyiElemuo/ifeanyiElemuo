@@ -9,42 +9,31 @@ const map = L.map("map", {
   layers: [tile],
 }).fitWorld();
 
+// border outline
 let countryBorders = L.geoJSON().addTo(map);
 
 $(window).on("load", function () {
-  const countryInfo = L.easyButton(
-    "fa-solid fa-circle-info",
-    function (btn, map) {
-      $("#info").modal("show");
-    }
-  ).addTo(map);
+  L.easyButton("fa-solid fa-circle-info", (btn, map) => {
+    $("#info").modal("show");
+  }).addTo(map);
 
-  const countryWiki = L.easyButton("fa-solid fa-globe", function (btn, map) {
+  L.easyButton("fa-globe", (btn, map) => {
     $("#wiki").modal("show");
   }).addTo(map);
 
-  const countryWeather = L.easyButton(
-    "fa-solid fa-question",
-    function (btn, map) {
-      $("#weather").modal("show");
-    }
-  ).addTo(map);
+  L.easyButton("fa-question", (btn, map) => {
+    $("#weather").modal("show");
+  }).addTo(map);
 
-  const countryCurrency = L.easyButton(
-    "fa-solid fa-question",
-    function (btn, map) {
-      $("#currency").modal("show");
-    }
-  ).addTo(map);
+  L.easyButton("fa-solid fa-question", (btn, map) => {
+    $("#currency").modal("show");
+  }).addTo(map);
 
-  const countryEconomy = L.easyButton(
-    "fa-solid fa-question",
-    function (btn, map) {
-      $("#economy").modal("show");
-    }
-  ).addTo(map);
+  L.easyButton("fa-solid fa-question", (btn, map) => {
+    $("#economy").modal("show");
+  }).addTo(map);
 
-  const countryNews = L.easyButton("fa-solid fa-question", function (btn, map) {
+  L.easyButton("fa-solid fa-question", (btn, map) => {
     $("#news").modal("show");
   }).addTo(map);
 
@@ -59,14 +48,14 @@ $(window).on("load", function () {
   }
 
   // on changing selected countries
-  let countrySelect = document.getElementById("countrySelect");
-  countrySelect.addEventListener("change", () => {
+  let countrySelect = $("#countrySelect");
+  countrySelect.change(() => {
     // remove existing layers
     countryBorders.clearLayers();
     clearNewsData();
     clearEcoData();
 
-    let selectCountryVal = countrySelect.value;
+    let selectCountryVal = countrySelect.val();
 
     highlightBorders(selectCountryVal);
     getNewsHeadlines(selectCountryVal);
@@ -158,11 +147,9 @@ $(window).on("load", function () {
 
         // economy modal
         // on changing selected period
-        let periodSelect = document.getElementById("periodSelect");
-        periodSelect.addEventListener("change", () => {
-          const periodIndex = periodSelect.selectedIndex;
-          const selectPeriod = periodSelect.options[periodIndex];
-          let period = selectPeriod.value;
+        let periodSelect = $("#periodSelect");
+        periodSelect.change(() => {
+          let period = periodSelect.val();
 
           // nominal GDP
           $.ajax({
@@ -316,16 +303,12 @@ $(window).on("load", function () {
   });
 
   // currency converter
-  const from = document.getElementById("from");
-  const to = document.getElementById("to");
-  const amount = document.getElementById("amount");
-  const convert = document.getElementById("convert");
-  const result = document.getElementById('result');
-  convert.addEventListener("click", () => {
-    let fromVal = from.value;
-    let toVal = to.value;
-    let amtVal = amount.value;
-    console.log(amtVal);
+  const convert = $("#convert");
+  convert.click(() => {
+    let fromVal = $("#from").val();
+    let toVal = $("#to").val();
+    let amtVal = $("#amount").val();
+
     $.ajax({
       url: "./libs/php/currencyConverter.php",
       type: "GET",
@@ -334,7 +317,8 @@ $(window).on("load", function () {
       success: ({ status, data }) => {
         if (status.name === "ok") {
           console.log(data);
-          $("#result").html(data['conversion_result']);
+          const result = data["conversion_result"];
+          $("#result").html(result.toFixed(2));
         }
       },
       error: function (err) {
@@ -417,15 +401,6 @@ function loadUserLocation({ coords: { latitude, longitude } }) {
     success: ({ status, data }) => {
       if (status.name === "ok") {
         countryCode = data.countryCode;
-        // console.log(countryCode);
-        let countrySelect = document.getElementById("countrySelect");
-        countrySelect.id = countryCode;
-        for (let i = 0; i < countrySelect.options.length; i++) {
-          if (countrySelect.options[i].value === countrySelect.id) {
-            countrySelect.selectedIndex = i;
-            return;
-          }
-        }
         $("#countrySelect").val(countryCode).change();
       }
     },

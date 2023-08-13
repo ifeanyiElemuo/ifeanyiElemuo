@@ -23,3 +23,15 @@ body {
   width: 250px;
   margin: 0 auto;
 }
+
+.p-2 {
+  width: 250px;
+}
+
+.from-curr, .to-curr {
+  padding: 1px;
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}

@@ -203,14 +203,21 @@
           </div>
           <div class="modal-body">
             <form class="form-inline">
-              <div class="d-flex flex-row bg-secondary">
-                <input id="amount" type="number" class="p-2"/>
-                <select id="from" class="p-2"></select>
+              <div class="from-curr bg-secondary">
+                <input id="amount" type="number" class="p-2 border" />
+                <select id="from" class="p-2 border"></select>
               </div>
-              <select id="to"></select><br><br>
-              <button id="convert" class="btn btn-outline-success" type="button">Convert</button><br>
-              <label>Result: </label>
-              <p id="result"></p>
+              <div class="to-curr bg-secondary">
+                <output id="result" class="p-2 border bg-white"></output>
+                <select id="to" class="p-2 border"></select>
+              </div>
+              <button
+                id="convert"
+                class="btn btn-outline-success"
+                type="button"
+              >
+                Convert</button
+              ><br />
             </form>
           </div>
           <div class="modal-footer">
