@@ -12,28 +12,28 @@ const map = L.map("map", {
 // border outline
 let countryBorders = L.geoJSON().addTo(map);
 
-$(window).on("load", function () {
-  L.easyButton("fa-solid fa-circle-info", (btn, map) => {
+$(window).on("load", () => {
+  L.easyButton("button fa-solid fa-circle-info fa-xl", (btn, map) => {
     $("#info").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-globe", (btn, map) => {
+  L.easyButton("button fa-solid fa-globe fa-xl", (btn, map) => {
     $("#wiki").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-question", (btn, map) => {
+  L.easyButton("button fa-solid fa-cloud-sun-rain fa-xl", (btn, map) => {
     $("#weather").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-solid fa-question", (btn, map) => {
+  L.easyButton("button fa-solid fa-coins fa-xl", (btn, map) => {
     $("#currency").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-solid fa-question", (btn, map) => {
+  L.easyButton("button fa-solid fa-chart-simple fa-xl", (btn, map) => {
     $("#economy").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-solid fa-question", (btn, map) => {
+  L.easyButton("button fa-solid fa-newspaper fa-xl", (btn, map) => {
     $("#news").modal("show");
   }).addTo(map);
 

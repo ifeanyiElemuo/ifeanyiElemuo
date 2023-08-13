@@ -35,3 +35,8 @@ body {
   overflow: hidden;
   margin-bottom: 14px;
 }
+
+.button:hover {
+  color: #ef1233;
+  transition: 0.7ms;
+}
