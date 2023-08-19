@@ -13,7 +13,7 @@
 
 	$executionStartTime = microtime(true);
 
-    $url = 'https://newsapi.org/v2/top-headlines?country='. $_REQUEST['selectCountryVal'] . '&apiKey=' . $apiKey;
+    $url = 'https://newsapi.org/v2/top-headlines?country='. $_REQUEST['iso_a2'] . '&apiKey=' . $apiKey;
 
 	$ch = curl_init();
     curl_setopt($ch, CURLOPT_USERAGENT, $agent);

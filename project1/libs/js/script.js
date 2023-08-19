@@ -38,7 +38,6 @@ $(window).on("load", () => {
   }).addTo(map);
 
   loadSelectCountries();
-  loadSelectCurrencies();
 
   // load user location
   if (navigator.geolocation) {
@@ -52,27 +51,29 @@ $(window).on("load", () => {
   countrySelect.change(() => {
     // remove existing layers
     countryBorders.clearLayers();
-    clearNewsData();
-    clearEcoData();
+    clearPrevData();
 
-    let selectCountryVal = countrySelect.val();
+    let iso_a2 = countrySelect.val();
+    console.log(iso_a2);
 
-    highlightBorders(selectCountryVal);
-    getNewsHeadlines(selectCountryVal);
+    highlightBorders(iso_a2);
+    getNewsHeadlines(iso_a2);
 
     // country info modal
     $.ajax({
       url: "./libs/php/getCountryInfo.php",
       type: "GET",
       dataType: "json",
-      data: { selectCountryVal },
+      data: { iso_a2 },
       success: ({ status, data }) => {
         if (status.name === "ok") {
           // console.log(data);
           $("#country").html(data["geonames"][0]["countryName"]);
           $("#capital").html(data["geonames"][0]["capital"]);
-          $("#population").html(data["geonames"][0]["population"]);
-          $("#area").html(data["geonames"][0]["areaInSqKm"]);
+          $("#population").html(
+            thousandSeparator(data["geonames"][0]["population"])
+          );
+          $("#area").html(thousandSeparator(data["geonames"][0]["areaInSqKm"]));
           $("#continent").html(data["geonames"][0]["continentName"]);
         }
 
@@ -160,7 +161,8 @@ $(window).on("load", () => {
             success: ({ status, data }) => {
               if (status.name === "ok") {
                 // console.log(data);
-                $("#ngdp").html(data);
+                const result = data.toFixed(2);
+                $("#ngdp").html(thousandSeparator(result));
               }
             },
             error: function (err) {
@@ -178,7 +180,8 @@ $(window).on("load", () => {
             success: ({ status, data }) => {
               if (status.name === "ok") {
                 // console.log(data);
-                $("#ngdppc").html(data);
+                const result = data.toFixed(2);
+                $("#ngdppc").html(thousandSeparator(result));
               }
             },
             error: function (err) {
@@ -250,7 +253,7 @@ $(window).on("load", () => {
             success: ({ status, data }) => {
               if (status.name === "ok") {
                 // console.log(data);
-                $("#govtrev").html(data);
+                $("#govtrev").html(data.toFixed(2));
               }
             },
             error: function (err) {
@@ -268,7 +271,7 @@ $(window).on("load", () => {
             success: ({ status, data }) => {
               if (status.name === "ok") {
                 // console.log(data);
-                $("#govtexp").html(data);
+                $("#govtexp").html(data.toFixed(2));
               }
             },
             error: function (err) {
@@ -286,7 +289,7 @@ $(window).on("load", () => {
             success: ({ status, data }) => {
               if (status.name === "ok") {
                 // console.log(data);
-                $("#govtdebt").html(data);
+                $("#govtdebt").html(data.toFixed(2));
               }
             },
             error: function (err) {
@@ -295,6 +298,57 @@ $(window).on("load", () => {
             },
           });
         });
+      },
+      error: function (err) {
+        console.log(err.responseText);
+      },
+    });
+
+    //load currencies for conversion
+    $.ajax({
+      url: "./libs/php/getCurrencyData.php",
+      type: "GET",
+      dataType: "json",
+      success: ({ status, data }) => {
+        if (status.name === "ok") {
+          // console.log(data);
+          const fromCurr = $("#from");
+          const toCurr = $("#to");
+
+          // Function to create and add an <option> tag to the fromCurr element
+          function createOptionTag(id, value, text) {
+            const optionTag = $("<option>", {
+              id: id,
+              value: value,
+              text: text,
+            });
+            fromCurr.append(optionTag);
+          }
+          // Loop through each inner list and create <option> tags
+          for (const innerList of data) {
+            for (let i = 0; i < innerList.length; i += 3) {
+              const iso_a2 = innerList[i + 2];
+              const currency_code = innerList[i];
+              const currency_name = innerList[i + 1];
+              createOptionTag(
+                iso_a2,
+                currency_code,
+                currency_name + ", " + currency_code
+              );
+            }
+          }
+          // Sort the options based on their text
+          const options = fromCurr.find("option");
+          options.sort(function (a, b) {
+            return a.text.localeCompare(b.text);
+          });
+          fromCurr.empty().append(options);
+
+          const selectCountryOption = fromCurr.find("#" + iso_a2);
+          if (selectCountryOption.length > 0) {
+            toCurr.append(selectCountryOption.clone());
+          }
+        }
       },
       error: function (err) {
         console.log(err.responseText);
@@ -316,9 +370,9 @@ $(window).on("load", () => {
       data: { fromVal, toVal, amtVal },
       success: ({ status, data }) => {
         if (status.name === "ok") {
-          console.log(data);
-          const result = data["conversion_result"];
-          $("#result").html(result.toFixed(2));
+          // console.log(data);
+          const result = data["conversion_result"].toFixed(2);
+          $("#result").html(thousandSeparator(result));
         }
       },
       error: function (err) {
@@ -341,43 +395,6 @@ function loadSelectCountries() {
           Object.entries(data)
             .sort()
             .map(([country, id]) => `<option value="${id}">${country}</option>`)
-            .join("")
-        );
-      }
-    },
-    error: function (err) {
-      console.log(err.responseText);
-    },
-  });
-}
-
-// load currencies to select
-function loadSelectCurrencies() {
-  $.ajax({
-    url: "./libs/php/getCurrencyData.php",
-    type: "GET",
-    dataType: "json",
-    success: ({ status, data }) => {
-      if (status.name === "ok") {
-        // console.log(data);
-        const fromCurr = $("#from");
-        const toCurr = $("#to");
-        fromCurr.append(
-          Object.entries(data.codes)
-            .sort()
-            .map(
-              ([currency, code]) =>
-                `<option value="${code}">${currency}, ${code}</option>`
-            )
-            .join("")
-        );
-        toCurr.append(
-          Object.entries(data.codes)
-            .sort()
-            .map(
-              ([currency, code]) =>
-                `<option value="${code}">${currency}, ${code}</option>`
-            )
             .join("")
         );
       }
@@ -411,12 +428,12 @@ function loadUserLocation({ coords: { latitude, longitude } }) {
 }
 
 // highlight country borders
-function highlightBorders(selectCountryVal) {
+function highlightBorders(iso_a2) {
   $.ajax({
     url: "./libs/php/getCountryBorders.php",
     type: "GET",
     dataType: "json",
-    data: { selectCountryVal },
+    data: { iso_a2 },
     success: ({ status, data }) => {
       if (status.name === "ok") {
         // console.log(data);
@@ -435,12 +452,12 @@ function highlightBorders(selectCountryVal) {
 }
 
 // news modal function
-function getNewsHeadlines(selectCountryVal) {
+function getNewsHeadlines(iso_a2) {
   $.ajax({
     url: "./libs/php/getCountryNews.php",
     type: "GET",
     dataType: "json",
-    data: { selectCountryVal },
+    data: { iso_a2 },
     success: ({ status, data }) => {
       if (status.name === "ok") {
         // console.log(data);
@@ -461,12 +478,8 @@ function getNewsHeadlines(selectCountryVal) {
   });
 }
 
-// clear country news
-function clearNewsData() {
-  $("#newsTitle").html("");
-}
-
-function clearEcoData() {
+// clear previous data
+function clearPrevData() {
   $("#ngdp").html("");
   $("#ngdppc").html("");
   $("#rgdpgr").html("");
@@ -475,4 +488,14 @@ function clearEcoData() {
   $("#govtrev").html("");
   $("#govtexp").html("");
   $("#govtdebt").html("");
+  $("#newsTitle").html("");
+  $("#from").html("");
+  $("#to").html("");
+  $("#result").html("");
+}
+
+function thousandSeparator(number) {
+  const parts = number.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
 }
