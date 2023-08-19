@@ -54,7 +54,7 @@ $(window).on("load", () => {
     clearPrevData();
 
     let iso_a2 = countrySelect.val();
-    console.log(iso_a2);
+    // console.log(iso_a2);
 
     highlightBorders(iso_a2);
     getNewsHeadlines(iso_a2);
@@ -347,6 +347,25 @@ $(window).on("load", () => {
           const selectCountryOption = fromCurr.find("#" + iso_a2);
           if (selectCountryOption.length > 0) {
             toCurr.append(selectCountryOption.clone());
+          }
+
+          // for euro countries
+          const euroOption = fromCurr.find("#EU");  
+          const euroCountries = ["AT", "BE", "CY", "EE", "FI", "FR", "DE", "GR", "IE", "IT",
+          "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES"];
+          for (iterator of euroCountries) {
+            if (iso_a2 === iterator) {
+              toCurr.append(euroOption.clone());
+            }
+          }
+          
+          // for cfa franc countries
+          const cfafrancOption = fromCurr.find("#XO");
+          const cfafrancCountries = ["BJ", "BF", "CI", "GW", "ML", "NE", "SN", "TG", "CM", "CF", "TD", "CG", "GQ", "GA"];
+          for (iterator of cfafrancCountries) {
+            if (iso_a2 === iterator) {
+              toCurr.append(cfafrancOption.clone());
+            }
           }
         }
       },
