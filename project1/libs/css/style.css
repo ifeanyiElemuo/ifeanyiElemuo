@@ -25,7 +25,7 @@ body {
 }
 
 .p-2 {
-  width: 250px;
+  width: 100%;
 }
 
 .from-curr, .to-curr {
@@ -39,4 +39,8 @@ body {
 .button:hover {
   color: #ef1233;
   transition: 0.7ms;
+}
+
+.button {
+  font-size: 100%;
 }

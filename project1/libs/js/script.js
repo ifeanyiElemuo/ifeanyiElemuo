@@ -10,7 +10,16 @@ const map = L.map("map", {
 }).fitWorld();
 
 // border outline
-let countryBorders = L.geoJSON().addTo(map);
+var countryBorders = L.geoJSON().addTo(map);
+
+// markers
+var markers = L.markerClusterGroup();
+
+var placeIcon = L.icon({
+  iconUrl: './libs/img/place.png',
+  shadowUrl: './libs/img/shadow.png',
+  popupAnchor: [15, 3],
+});
 
 $(window).on("load", () => {
   L.easyButton("button fa-solid fa-circle-info fa-xl", (btn, map) => {
@@ -43,7 +52,7 @@ $(window).on("load", () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(loadUserLocation);
   } else {
-    alert("Device loaction not found!");
+    alert("Device location not found!");
   }
 
   // on changing selected countries
@@ -51,6 +60,7 @@ $(window).on("load", () => {
   countrySelect.change(() => {
     // remove existing layers
     countryBorders.clearLayers();
+    markers.clearLayers();
     clearPrevData();
 
     let iso_a2 = countrySelect.val();
@@ -77,9 +87,75 @@ $(window).on("load", () => {
           $("#continent").html(data["geonames"][0]["continentName"]);
         }
 
-        let countryName = encodeURI(data["geonames"][0]["countryName"]);
-        let iso_a3 = data["geonames"][0]["isoAlpha3"];
-        let country = data["geonames"][0]["countryName"];
+        var countryName = encodeURI(data["geonames"][0]["countryName"]);
+        var iso_a3 = data["geonames"][0]["isoAlpha3"];
+        var country = data["geonames"][0]["countryName"];
+        var north = data["geonames"][0]["north"];
+        var south = data["geonames"][0]["south"];
+        var east = data["geonames"][0]["east"];
+        var west = data["geonames"][0]["west"];
+
+        // find nearby cities
+        $.ajax({
+          url: "./libs/php/getCities.php",
+          type: "GET",
+          dataType: "json",
+          data: { north, south, east, west },
+          success: ({ status, data }) => {
+            if (status.name === "ok") {
+              // console.log(data);
+              const places = [];
+              for (iterator of data["geonames"]) {
+                var latitude = iterator["lat"];
+                var longitude = iterator["lng"];
+                var name = iterator["name"];
+                var place = new Array(latitude, longitude, name);
+                places.push(place);
+
+                // weather modal
+                $.ajax({
+                  url: "./libs/php/getCountryWeather.php",
+                  type: "GET",
+                  dataType: "json",
+                  data: { latitude, longitude },
+                  success: ({ status, data }) => {
+                    if (status.name === "ok") {
+                      // console.log(data);
+                      $("#temp").html(data["main"]["temp"]);
+                      $("#tempMin").html(data["main"]["temp_min"]);
+                      $("#tempMax").html(data["main"]["temp_max"]);
+                      $("#humidity").html(data["main"]["humidity"]);
+                      $("#weatherMain").html(data["weather"][0]["main"]);
+                      $("#weatherDesc").html(
+                        data["weather"][0]["description"]
+                      );
+                      $("#windDeg").html(data["wind"]["deg"]);
+                      $("#windGust").html(data["wind"]["gust"]);
+                      $("#windSpeed").html(data["wind"]["speed"]);
+                    }
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  },
+                });
+              }
+              // console.log(places);
+              // adding markers for nearby cities
+              for (iterator of places) {
+                var placeName = iterator[2];
+                var marker = L.marker(new L.LatLng(iterator[0], iterator[1]), {
+                  icon: placeIcon
+                });
+                marker.bindPopup(placeName);
+                markers.addLayer(marker);
+              }
+              map.addLayer(markers);
+            }
+          },
+          error: function (err) {
+            console.log(err);
+          },
+        });
 
         // wikipedia modal
         $.ajax({
@@ -108,35 +184,6 @@ $(window).on("load", () => {
                       iterator["wikipediaUrl"] +
                       "' target='_blank'>Read more...</a>"
                   );
-
-                  const latitude = iterator["lat"];
-                  const longitude = iterator["lng"];
-                  // weather modal
-                  $.ajax({
-                    url: "./libs/php/getCountryWeather.php",
-                    type: "GET",
-                    dataType: "json",
-                    data: { latitude, longitude },
-                    success: ({ status, data }) => {
-                      if (status.name === "ok") {
-                        // console.log(data);
-                        $("#temp").html(data["main"]["temp"]);
-                        $("#tempMin").html(data["main"]["temp_min"]);
-                        $("#tempMax").html(data["main"]["temp_max"]);
-                        $("#humidity").html(data["main"]["humidity"]);
-                        $("#weatherMain").html(data["weather"][0]["main"]);
-                        $("#weatherDesc").html(
-                          data["weather"][0]["description"]
-                        );
-                        $("#windDeg").html(data["wind"]["deg"]);
-                        $("#windGust").html(data["wind"]["gust"]);
-                        $("#windSpeed").html(data["wind"]["speed"]);
-                      }
-                    },
-                    error: function (err) {
-                      console.log(err);
-                    },
-                  });
                 }
               }
             }
@@ -513,6 +560,7 @@ function clearPrevData() {
   $("#result").html("");
 }
 
+// add comma every thousandth digit
 function thousandSeparator(number) {
   const parts = number.toString().split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");

@@ -8,12 +8,14 @@
     <meta name="author" content="Ifeanyi Elemuo" />
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="libs/img/icon.png" type="image/x-icon">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="libs/css/bootstrap.min.css" />
     <link rel="stylesheet" href="libs/css/style.css" />
     <link rel="stylesheet" href="libs/css/leaflet.css" />
+    <link rel="stylesheet" href="libs/css/MarkerCluster.css">
+    <link rel="stylesheet" href="libs/css/MarkerCluster.Default.css">
     <link rel="stylesheet" href="libs/css/easy-button.css" />
   </head>
 
@@ -40,24 +42,39 @@
           <div class="modal-body">
             <table class="table table-striped">
               <tr>
+                <td class="text-start">
+                  &nbsp;<i class="fa-solid fa-flag fa-lg"></i>
+                </td>
                 <td>Country</td>
-                <td id="country" class="text-end"></td>
+                <td id="country" class="text-center"></td>
               </tr>
               <tr>
+                <td class="text-start">
+                  &nbsp;<i class="fa-solid fa-landmark-flag fa-lg"></i>
+                </td>
                 <td>Capital</td>
-                <td id="capital" class="text-end"></td>
+                <td id="capital" class="text-center"></td>
               </tr>
               <tr>
+                <td class="text-start">
+                  &nbsp;<i class="fa-solid fa-people-group fa-lg"></i>
+                </td>
                 <td>Population</td>
-                <td id="population" class="text-end"></td>
+                <td id="population" class="text-center"></td>
               </tr>
               <tr>
+                <td class="text-start">
+                  &nbsp;<i class="fa-solid fa-map fa-lg"></i>
+                </td>
                 <td>Area, <em class="small">SqKm</em></td>
-                <td id="area" class="text-end"></td>
+                <td id="area" class="text-center"></td>
               </tr>
               <tr>
+                <td class="text-start">
+                  &nbsp;<i class="fa-solid fa-globe fa-lg"></i>
+                </td>
                 <td>Continent</td>
-                <td id="continent" class="text-end"></td>
+                <td id="continent" class="text-center"></td>
               </tr>
             </table>
           </div>
@@ -127,53 +144,54 @@
             <table class="table table-striped">
               <tr>
                 <td>
-                  <strong>Temperature, </strong><em class="small">celcius</em>
+                  &nbsp;<i class="fa-solid fa-temperature-high fa-lg"></i>
+                  <strong>&nbsp;&nbsp;&nbsp;Temperature, </strong><em class="small">celcius</em>
                 </td>
                 <td class="text-end"></td>
               </tr>
               <tr>
-                <td class="small">Current</td>
-                <td id="temp" class="text-end"></td>
+                <td class="small">&nbsp;Current</td>
+                <td id="temp" class="text-center"></td>
               </tr>
               <tr>
-                <td class="small">Min</td>
-                <td id="tempMin" class="text-end"></td>
+                <td class="small">&nbsp;Min</td>
+                <td id="tempMin" class="text-center"></td>
               </tr>
               <tr>
-                <td class="small">Max</td>
-                <td id="tempMax" class="text-end"></td>
+                <td class="small">&nbsp;Max</td>
+                <td id="tempMax" class="text-center"></td>
               </tr>
               <tr>
-                <td class="small">Humidity</td>
-                <td id="humidity" class="text-end"></td>
+                <td class="small">&nbsp;Humidity</td>
+                <td id="humidity" class="text-center"></td>
               </tr>
               <tr>
-                <td><strong>Weather</strong></td>
+                <td>&nbsp;<i class="fa-solid fa-cloud fa-lg"></i><strong>&nbsp;&nbsp;&nbsp;Weather</strong></td>
                 <td class="text-end"></td>
               </tr>
               <tr>
-                <td class="small">Current</td>
-                <td id="weatherMain" class="text-end"></td>
+                <td class="small">&nbsp;Current</td>
+                <td id="weatherMain" class="text-center"></td>
               </tr>
               <tr>
-                <td class="small">Description</td>
-                <td id="weatherDesc" class="text-end"></td>
+                <td class="small">&nbsp;Description</td>
+                <td id="weatherDesc" class="text-center"></td>
               </tr>
               <tr>
-                <td><strong>Wind</strong></td>
+                <td>&nbsp;<i class="fa-solid fa-wind fa-lg"></i><strong>&nbsp;&nbsp;&nbsp;Wind</strong></td>
                 <td class="text-end"></td>
               </tr>
               <tr>
-                <td class="small">Deg</td>
-                <td id="windDeg" class="text-end"></td>
+                <td class="small">&nbsp;Deg</td>
+                <td id="windDeg" class="text-center"></td>
               </tr>
               <tr>
-                <td class="small">Gust</td>
-                <td id="windGust" class="text-end"></td>
+                <td class="small">&nbsp;Gust</td>
+                <td id="windGust" class="text-center"></td>
               </tr>
               <tr>
-                <td class="small">Speed</td>
-                <td id="windSpeed" class="text-end"></td>
+                <td class="small">&nbsp;Speed</td>
+                <td id="windSpeed" class="text-center"></td>
               </tr>
             </table>
           </div>
@@ -281,37 +299,37 @@
             <table class="table table-striped">
               <tr>
                 <td>Nominal GDP, <em class="small">billions of USD</em></td>
-                <td id="ngdp" class="text-end"></td>
+                <td id="ngdp" class="text-center"></td>
               </tr>
               <tr>
                 <td>Nominal GDP per capita, <em class="small">USD</em></td>
-                <td id="ngdppc" class="text-end"></td>
+                <td id="ngdppc" class="text-center"></td>
               </tr>
               <tr>
                 <td>Real GDP growth, <em class="small">% change</em></td>
-                <td id="rgdpgr" class="text-end"></td>
+                <td id="rgdpgr" class="text-center"></td>
               </tr>
               <tr>
                 <td>Inflation rate (CPI), <em class="small">% change</em></td>
-                <td id="ircpi" class="text-end"></td>
+                <td id="ircpi" class="text-center"></td>
               </tr>
               <tr>
                 <td>Unemployment rate, <em class="small">%</em></td>
-                <td id="unemr" class="text-end"></td>
+                <td id="unemr" class="text-center"></td>
               </tr>
               <tr>
                 <td>Government revenue, <em class="small">% of GDP</em></td>
-                <td id="govtrev" class="text-end"></td>
+                <td id="govtrev" class="text-center"></td>
               </tr>
               <tr>
                 <td>Government expenditure, <em class="small">% of GDP</em></td>
-                <td id="govtexp" class="text-end"></td>
+                <td id="govtexp" class="text-center"></td>
               </tr>
               <tr>
                 <td id="GGXWDG_NGDP">
                   Government debt, <em class="small">% of GDP</em>
                 </td>
-                <td id="govtdebt" class="text-end"></td>
+                <td id="govtdebt" class="text-center"></td>
               </tr>
             </table>
           </div>
@@ -361,6 +379,7 @@
       type="application/javascript"
     ></script>
     <script src="libs/js/leaflet.js" type="application/javascript"></script>
+    <script src="libs/js/leaflet.markercluster.js" type="application/javascript"></script>
     <script src="libs/js/easy-button.js" type="application/javascript"></script>
     <script src="libs/js/script.js" type="application/javascript"></script>
     <script src="libs/js/fontawesome.js" type="application/javascript"></script>
