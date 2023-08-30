@@ -11,36 +11,24 @@ body {
   padding: 0;
 }
 
-#selectContainer {
-  position: fixed;
+#selectContainer, #periodContainer {
+  position: absolute;
   top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
   z-index: 1000;
-  width: 100%;
-  padding: 11px 0;
-}
-
-.form-select {
+  overflow: auto;
   width: 250px;
-  margin: 0 auto;
+  padding: 11px 0;
+  margin: auto;
 }
 
-.p-2 {
-  width: 100%;
+#ecoTable {
+  margin-top: 45px;
 }
 
-.from-curr, .to-curr {
-  padding: 1px;
-  display: flex;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 14px;
-}
-
-.button:hover {
-  color: #ef1233;
-  transition: 0.7ms;
-}
-
-.button {
-  font-size: 100%;
+.form-control {
+  line-height: 30px;
+  margin-right: 2.5px;
 }

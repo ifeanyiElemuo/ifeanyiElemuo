@@ -8,11 +8,11 @@
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "../../../" );
 	$dotenv->safeLoad();
 
-	$username = $_ENV["API_KEY"];
+	$username = $_ENV["API_USERNAME"];
 
 	$executionStartTime = microtime(true);
 
-    $url ='https://api.weatherapi.com/v1/forecast.json?key=' . $username . '&q=' . $_REQUEST['capital'] . '&days=4&aqi=no&alerts=no';
+	$url='http://api.geonames.org/searchJSON?q=university&country=' . $_REQUEST['iso_a2'] . '&username=' . $username .'&style=full';
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -23,13 +23,13 @@
 
 	curl_close($ch);
 
-	$decode = json_decode($result, true);	
+	$jsonData = json_decode($result, true);
 
 	$output['status']['code'] = "200";
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-	$output['data'] = $decode;
+	$output['data'] = $jsonData;
 	
 	header('Content-Type: application/json; charset=UTF-8');
 

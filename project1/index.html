@@ -3,26 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Find My Country</title>
-    <meta name="description" content="Country Map and Profile, Headline News, Economic Data, and Currency Converter" />
+    <title>Gazetteer</title>
+    <meta
+      name="description"
+      content="Country Map and Profile, Headline News, Economic Data, and Currency Converter"
+    />
     <meta name="author" content="Ifeanyi Elemuo" />
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="libs/img/icon.png" type="image/x-icon">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./favicon/favicon-16x16.png"
+    />
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="libs/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="libs/css/style.css" />
     <link rel="stylesheet" href="libs/css/leaflet.css" />
-    <link rel="stylesheet" href="libs/css/MarkerCluster.css">
-    <link rel="stylesheet" href="libs/css/MarkerCluster.Default.css">
+    <!-- <link rel="stylesheet" href="libs/css/leaflet.extra-markers.min.css"> -->
+    <link rel="stylesheet" href="libs/css/MarkerCluster.css" />
+    <link rel="stylesheet" href="libs/css/MarkerCluster.Default.css" />
     <link rel="stylesheet" href="libs/css/easy-button.css" />
+    <link rel="stylesheet" href="libs/css/style.css" />
   </head>
 
   <body>
-    <span id="selectContainer">
+    <div id="selectContainer">
       <select id="countrySelect" class="form-select shadow-sm"></select>
-    </span>
+    </div>
 
     <div id="map"></div>
 
@@ -42,39 +62,39 @@
           <div class="modal-body">
             <table class="table table-striped">
               <tr>
-                <td class="text-start">
-                  &nbsp;<i class="fa-solid fa-flag fa-lg"></i>
+                <td class="text-center">
+                  <i class="fa-solid fa-flag fa-lg"></i>
                 </td>
-                <td>Country</td>
-                <td id="country" class="text-center"></td>
+                <td class="text-center">Country</td>
+                <td id="country" class="text-end"></td>
               </tr>
               <tr>
-                <td class="text-start">
-                  &nbsp;<i class="fa-solid fa-landmark-flag fa-lg"></i>
+                <td class="text-center">
+                  <i class="fa-solid fa-landmark-flag fa-lg"></i>
                 </td>
-                <td>Capital</td>
-                <td id="capital" class="text-center"></td>
+                <td class="text-center">Capital</td>
+                <td id="capital" class="text-end"></td>
               </tr>
               <tr>
-                <td class="text-start">
-                  &nbsp;<i class="fa-solid fa-people-group fa-lg"></i>
+                <td class="text-center">
+                  <i class="fa-solid fa-people-group fa-lg"></i>
                 </td>
-                <td>Population</td>
-                <td id="population" class="text-center"></td>
+                <td class="text-center">Population</td>
+                <td id="population" class="text-end"></td>
               </tr>
               <tr>
-                <td class="text-start">
-                  &nbsp;<i class="fa-solid fa-map fa-lg"></i>
+                <td class="text-center">
+                  <i class="fa-solid fa-map fa-lg"></i>
                 </td>
-                <td>Area, <em class="small">SqKm</em></td>
-                <td id="area" class="text-center"></td>
+                <td class="text-center">Area, <em class="small">SqKm</em></td>
+                <td id="area" class="text-end"></td>
               </tr>
               <tr>
-                <td class="text-start">
-                  &nbsp;<i class="fa-solid fa-globe fa-lg"></i>
+                <td class="text-center">
+                  <i class="fa-solid fa-globe fa-lg"></i>
                 </td>
-                <td>Continent</td>
-                <td id="continent" class="text-center"></td>
+                <td class="text-center">Continent</td>
+                <td id="continent" class="text-end"></td>
               </tr>
             </table>
           </div>
@@ -132,7 +152,7 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
           <div class="modal-header bg-success bg-gradient text-white">
-            <h5 class="modal-title">Weather Report</h5>
+            <h5 id="modalLabel" class="modal-title">Weather Report</h5>
             <button
               type="button"
               class="btn-close btn-close-white"
@@ -141,68 +161,125 @@
             ></button>
           </div>
           <div class="modal-body">
-            <table class="table table-striped">
-              <tr>
-                <td>
-                  &nbsp;<i class="fa-solid fa-temperature-high fa-lg"></i>
-                  <strong>&nbsp;&nbsp;&nbsp;Temperature, </strong><em class="small">celcius</em>
-                </td>
-                <td class="text-end"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Current</td>
-                <td id="temp" class="text-center"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Min</td>
-                <td id="tempMin" class="text-center"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Max</td>
-                <td id="tempMax" class="text-center"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Humidity</td>
-                <td id="humidity" class="text-center"></td>
-              </tr>
-              <tr>
-                <td>&nbsp;<i class="fa-solid fa-cloud fa-lg"></i><strong>&nbsp;&nbsp;&nbsp;Weather</strong></td>
-                <td class="text-end"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Current</td>
-                <td id="weatherMain" class="text-center"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Description</td>
-                <td id="weatherDesc" class="text-center"></td>
-              </tr>
-              <tr>
-                <td>&nbsp;<i class="fa-solid fa-wind fa-lg"></i><strong>&nbsp;&nbsp;&nbsp;Wind</strong></td>
-                <td class="text-end"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Deg</td>
-                <td id="windDeg" class="text-center"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Gust</td>
-                <td id="windGust" class="text-center"></td>
-              </tr>
-              <tr>
-                <td class="small">&nbsp;Speed</td>
-                <td id="windSpeed" class="text-center"></td>
-              </tr>
-            </table>
+            <div id="pre-load"></div>
+            <!-- today -->
+            <div class="row">
+              <div class="col border m-2">
+                <p class="fw-bold fs-5 mt-1">TODAY</p>
+
+                <div class="row">
+                  <div class="col text-center m-3">
+                    <p id="todayConditions" class="fw-bold fs-6"></p>
+                  </div>
+
+                  <div class="col text-center">
+                    <img
+                      id="todayIcon"
+                      class="img-fluid mt-0"
+                      src=""
+                      alt=""
+                      title=""
+                    />
+                  </div>
+
+                  <div class="col text-center">
+                    <p class="fw-bold fs-4 mb-0">
+                      <span id="todayMaxTemp"></span><sup>o</sup
+                      ><span class="tempMetric">c</span>
+                    </p>
+                    <p class="fs-5 mt-0 text-secondary">
+                      <span id="todayMinTemp"></span><sup>o</sup
+                      ><span class="tempMetric">c</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- forecasts -->
+            <div class="row">
+              <!-- day 1 -->
+              <div class="col border m-2">
+                <div class="row">
+                  <div class="col text-center">
+                    <p id="day1Date" class="fw-bold fs-6 mt-3"></p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col text-center">
+                    <p class="fw-bold fs-5 mb-0">
+                      <span id="day1MaxTemp"></span><sup>o</sup>c
+                    </p>
+                    <p class="fs-6 mt-0 text-secondary">
+                      <span id="day1MinTemp"></span><sup>o</sup>c
+                    </p>
+                  </div>
+
+                  <div class="col text-center">
+                    <img id="day1Icon" src="" alt="" title="" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- day 2 -->
+              <div class="col border m-2">
+                <div class="row">
+                  <div class="col text-sm-center">
+                    <p id="day2Date" class="fw-bold fs-6 mt-3"></p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col text-center">
+                    <p class="fw-bold fs-5 mb-0">
+                      <span id="day2MaxTemp"></span><sup>o</sup>c
+                    </p>
+                    <p class="fs-6 mt-0 text-secondary">
+                      <span id="day2MinTemp"></span><sup>o</sup>c
+                    </p>
+                  </div>
+
+                  <div class="col text-center">
+                    <img id="day2Icon" src="" alt="" title="" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- day 3 -->
+              <div class="col border m-2">
+                <div class="row">
+                  <div class="col text-center">
+                    <p id="day3Date" class="fw-bold fs-6 mt-3"></p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col text-center">
+                    <p class="fw-bold fs-5 mb-0">
+                      <span id="day3MaxTemp"></span><sup>o</sup>c
+                    </p>
+                    <p class="fs-6 mt-0 text-secondary">
+                      <span id="day3MinTemp"></span><sup>o</sup>c
+                    </p>
+                  </div>
+
+                  <div class="col text-center">
+                    <img id="day3Icon" src="" alt="" title="" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-success btn-sm"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
+            <p class="fs-6 fw-light">
+              Last updated <span id="lastUpdated"></span>. Powered by
+              <a
+                href="https://www.weatherapi.com/"
+                target="_blank"
+                title="Free Weather API"
+                >WeatherAPI.com</a
+              >
+            </p>
           </div>
         </div>
       </div>
@@ -222,22 +299,23 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form class="form-inline">
-              <div class="from-curr bg-secondary">
-                <input id="amount" type="number" class="p-2 border" />
-                <select id="from" class="p-2 border"></select>
+            <form>
+              <div class="d-flex flex-row mb-3">
+                <input
+                  id="fromAmount"
+                  type="number"
+                  class="form-control"
+                  value="1"
+                  min="1"
+                  step="1"
+                />
+                <select id="from" class="form-select"></select>
               </div>
-              <div class="to-curr bg-secondary">
-                <output id="result" class="p-2 border bg-white"></output>
-                <select id="to" class="p-2 border"></select>
+
+              <div class="d-flex flex-row">
+                <input id="result" type="text" class="form-control" disabled />
+                <select id="to" class="form-select"></select>
               </div>
-              <button
-                id="convert"
-                class="btn btn-outline-success"
-                type="button"
-              >
-                Convert</button
-              ><br />
             </form>
           </div>
           <div class="modal-footer">
@@ -267,9 +345,8 @@
             ></button>
           </div>
           <div class="modal-body">
-            <span id="periodContainer">
+            <div id="periodContainer">
               <select id="periodSelect" class="form-select shadow-sm">
-                <option value="" disabled selected>-- select period</option>
                 <option value="2000">2000</option>
                 <option value="2001">2001</option>
                 <option value="2002">2002</option>
@@ -293,43 +370,43 @@
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
                 <option value="2022">2022</option>
-                <option value="2023">2023</option>
+                <option value="2023" selected>2023</option>
               </select>
-            </span>
-            <table class="table table-striped">
+            </div>
+            <table id="ecoTable" class="table table-striped">
               <tr>
                 <td>Nominal GDP, <em class="small">billions of USD</em></td>
-                <td id="ngdp" class="text-center"></td>
+                <td id="ngdp" class="text-end"></td>
               </tr>
               <tr>
                 <td>Nominal GDP per capita, <em class="small">USD</em></td>
-                <td id="ngdppc" class="text-center"></td>
+                <td id="ngdppc" class="text-end"></td>
               </tr>
               <tr>
                 <td>Real GDP growth, <em class="small">% change</em></td>
-                <td id="rgdpgr" class="text-center"></td>
+                <td id="rgdpgr" class="text-end"></td>
               </tr>
               <tr>
                 <td>Inflation rate (CPI), <em class="small">% change</em></td>
-                <td id="ircpi" class="text-center"></td>
+                <td id="ircpi" class="text-end"></td>
               </tr>
               <tr>
                 <td>Unemployment rate, <em class="small">%</em></td>
-                <td id="unemr" class="text-center"></td>
+                <td id="unemr" class="text-end"></td>
               </tr>
               <tr>
                 <td>Government revenue, <em class="small">% of GDP</em></td>
-                <td id="govtrev" class="text-center"></td>
+                <td id="govtrev" class="text-end"></td>
               </tr>
               <tr>
                 <td>Government expenditure, <em class="small">% of GDP</em></td>
-                <td id="govtexp" class="text-center"></td>
+                <td id="govtexp" class="text-end"></td>
               </tr>
               <tr>
                 <td id="GGXWDG_NGDP">
                   Government debt, <em class="small">% of GDP</em>
                 </td>
-                <td id="govtdebt" class="text-center"></td>
+                <td id="govtdebt" class="text-end"></td>
               </tr>
             </table>
           </div>
@@ -379,9 +456,18 @@
       type="application/javascript"
     ></script>
     <script src="libs/js/leaflet.js" type="application/javascript"></script>
-    <script src="libs/js/leaflet.markercluster.js" type="application/javascript"></script>
+    <script
+      src="libs/js/leaflet.markercluster.js"
+      type="application/javascript"
+    ></script>
+    <script
+      src="libs/js/leaflet.extra-markers.min.js"
+      type="application/javascript"
+    ></script>
     <script src="libs/js/easy-button.js" type="application/javascript"></script>
-    <script src="libs/js/script.js" type="application/javascript"></script>
     <script src="libs/js/fontawesome.js" type="application/javascript"></script>
+    <script src="libs/js/numeral.js" type="application/javascript"></script>
+    <script src="libs/js/dayjs.min.js" type="application/javascript"></script>
+    <script src="libs/js/script.js" type="application/javascript"></script>
   </body>
 </html>
