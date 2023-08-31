@@ -13,7 +13,7 @@
 
 	$executionStartTime = microtime(true);
 
-    $url = 'https://newsapi.org/v2/top-headlines?country='. $_REQUEST['iso_a2'] . '&apiKey=' . $apiKey;
+	$url = "https://newsdata.io/api/1/news?apikey=" . $apiKey . "&country=". $_REQUEST["iso_a2"] . "&full_content=0&size=10&image=1";
 
 	$ch = curl_init();
     curl_setopt($ch, CURLOPT_USERAGENT, $agent);

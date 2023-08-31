@@ -116,7 +116,7 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
           <div class="modal-header bg-success bg-gradient text-white">
-            <h5 class="modal-title">Wikipedia</h5>
+            <h5 class="modal-title">Country Profile</h5>
             <button
               type="button"
               class="btn-close btn-close-white"
@@ -125,14 +125,19 @@
             ></button>
           </div>
           <div class="modal-body">
-            <div id="thumbnail"></div>
-            <div>
-              <h6 id="title"></h6>
-              <br />
-              <p id="summary"></p>
-              <br />
-              <p id="wikiUrl"></p>
-            </div>
+            <table class="table table-borderless mb-3">
+              <!-- <tr>
+                <td><p id="title" class="fw-bold fs-6 text-dark"></p></td>
+              </tr> -->
+              <tr>
+                <p id="title" class="fw-bold fs-6 text-dark"></p>
+                <td id="thumbnail" rowspan='3' width='25%' height="25%"></td>
+                <td><p id="summary"></p></td>
+              </tr>
+              <tr>
+                <td><p id="wikiUrl"></p></td>
+              </tr>
+            </table>
           </div>
           <div class="modal-footer">
             <button
@@ -184,12 +189,10 @@
 
                   <div class="col text-center">
                     <p class="fw-bold fs-4 mb-0">
-                      <span id="todayMaxTemp"></span><sup>o</sup
-                      ><span class="tempMetric">c</span>
+                      <span id="todayMaxTemp">
                     </p>
                     <p class="fs-5 mt-0 text-secondary">
-                      <span id="todayMinTemp"></span><sup>o</sup
-                      ><span class="tempMetric">c</span>
+                      <span id="todayMinTemp">
                     </p>
                   </div>
                 </div>
@@ -208,10 +211,10 @@
                 <div class="row">
                   <div class="col text-center">
                     <p class="fw-bold fs-5 mb-0">
-                      <span id="day1MaxTemp"></span><sup>o</sup>c
+                      <span id="day1MaxTemp"></span>
                     </p>
                     <p class="fs-6 mt-0 text-secondary">
-                      <span id="day1MinTemp"></span><sup>o</sup>c
+                      <span id="day1MinTemp"></span>
                     </p>
                   </div>
 
@@ -232,39 +235,15 @@
                 <div class="row">
                   <div class="col text-center">
                     <p class="fw-bold fs-5 mb-0">
-                      <span id="day2MaxTemp"></span><sup>o</sup>c
+                      <span id="day2MaxTemp"></span>
                     </p>
                     <p class="fs-6 mt-0 text-secondary">
-                      <span id="day2MinTemp"></span><sup>o</sup>c
+                      <span id="day2MinTemp"></span>
                     </p>
                   </div>
 
                   <div class="col text-center">
                     <img id="day2Icon" src="" alt="" title="" />
-                  </div>
-                </div>
-              </div>
-
-              <!-- day 3 -->
-              <div class="col border m-2">
-                <div class="row">
-                  <div class="col text-center">
-                    <p id="day3Date" class="fw-bold fs-6 mt-3"></p>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col text-center">
-                    <p class="fw-bold fs-5 mb-0">
-                      <span id="day3MaxTemp"></span><sup>o</sup>c
-                    </p>
-                    <p class="fs-6 mt-0 text-secondary">
-                      <span id="day3MinTemp"></span><sup>o</sup>c
-                    </p>
-                  </div>
-
-                  <div class="col text-center">
-                    <img id="day3Icon" src="" alt="" title="" />
                   </div>
                 </div>
               </div>
@@ -423,7 +402,7 @@
     <div id="news" class="modal" data-bs-backdrop="false" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
-          <div class="modal-header bg-success bg-gradient text-white">
+          <div class="modal-header bg-danger bg-gradient text-white">
             <h5 class="modal-title">Headline News</h5>
             <button
               type="button"
@@ -432,7 +411,9 @@
               aria-label="Close"
             ></button>
           </div>
-          <div id="newsTitle" class="modal-body"></div>
+          <div id="newsTitle" class="modal-body">
+
+          </div>
           <div class="modal-footer">
             <button
               type="button"

@@ -171,7 +171,7 @@ $(window).on("load", () => {
     // console.log(iso_a2);
 
     highlightBorders(iso_a2);
-    // getNewsHeadlines(iso_a2);
+    getNewsHeadlines(iso_a2);
 
     // find nearby cities
     $.ajax({
@@ -308,49 +308,33 @@ $(window).on("load", () => {
         var countryName = encodeURI(data["geonames"][0]["countryName"]);
         var iso_a3 = data["geonames"][0]["isoAlpha3"];
         var country = data["geonames"][0]["countryName"];
-        var capital = data["geonames"][0]["capital"]
+        var capital = data["geonames"][0]["capital"];
 
         // weather modal
-        $.ajax({
-          url: "./libs/php/getCountryWeather.php",
-          type: "GET",
-          dataType: "json",
-          data: { capital },
-          success: ({ status, data }) => {
-            if (status.name === "ok") {
-              // console.log(data);
-              // today
-              $('#modalLabel').html(data["location"]["name"] + ", " + data["location"]["country"]);
-              $('#todayConditions').html(data["forecast"]["forecastday"][0]["day"]["condition"]["text"]);
-              $('#todayIcon').attr("src", data["forecast"]["forecastday"][0]["day"]["condition"]["icon"]);
-              $('#todayMaxTemp').html(data["forecast"]["forecastday"][0]["day"]["maxtemp_c"]);
-              $('#todayMinTemp').html(data["forecast"]["forecastday"][0]["day"]["mintemp_c"]);
-              
-              // day 1
-              $('#day1Date').text(dayjs(data["forecast"]["forecastday"][1]["date"]).format("ddd DD"));
-              $('#day1Icon').attr("src", data["forecast"]["forecastday"][1]["day"]["condition"]["icon"]);
-              $('#day1MaxTemp').text(data["forecast"]["forecastday"][1]["day"]["maxtemp_c"]);
-              $('#day1MinTemp').text(data["forecast"]["forecastday"][1]["day"]["mintemp_c"]);
+        $("#weather").on("show.bs.modal", () => {
+          getWeatherData(capital);
+        });
 
-              // day 2
-              $('#day2Date').text(dayjs(data["forecast"]["forecastday"][2]["date"]).format("ddd DD"));
-              $('#day2Icon').attr("src", data["forecast"]["forecastday"][2]["day"]["condition"]["icon"]);
-              $('#day2MaxTemp').text(data["forecast"]["forecastday"][2]["day"]["maxtemp_c"]);
-              $('#day2MinTemp').text(data["forecast"]["forecastday"][2]["day"]["mintemp_c"]);
+        $("#weather").on("hidden.bs.modal", () => {
+          $("#pre-load").removeClass("fadeOut");
 
-              // day 3
-              $('#day3Date').text(dayjs(data["forecast"]["forecastday"][3]["date"]).format("ddd DD"));
-              $('#day3Icon').attr("src", data["forecast"]["forecastday"][3]["day"]["condition"]["icon"]);
-              $('#day3MaxTemp').text(data["forecast"]["forecastday"][3]["day"]["maxtemp_c"]);
-              $('#day3MinTemp').text(data["forecast"]["forecastday"][3]["day"]["mintemp_c"]);
+          $("#modalLabel").html("");
+          $("#todayConditions").html("");
+          $("#todayIcon").attr("src", "");
+          $("#todayMaxTemp").html("");
+          $("#todayMinTemp").html("");
 
-              $('#lastUpdated').text(dayjs(data["current"]["last_updated"]).format("HH:mm, DD MMM"));
-            }
-          },
-          error: function (err) {
-            // console.log(err);
-            $('#weather .modal-title').replaceWith("Error retrieving data");
-          },
+          $("#day1Date").text("");
+          $("#day1Icon").attr("src", "");
+          $("#day1MinTemp").text("");
+          $("#day1MaxTemp").text("");
+
+          $("#day2Date").text("");
+          $("#day2Icon").attr("src", "");
+          $("#day2MinTemp").text("");
+          $("#day2MaxTemp").text("");
+
+          $("#lastUpdated").text("");
         });
 
         // wikipedia modal
@@ -381,30 +365,31 @@ $(window).on("load", () => {
                       "' target='_blank'>Wikipedia Page...</a>"
                   );
                 }
+                // $("#wikiImg").addClass("img-fluid rounded");
               }
             }
           },
           error: function (err) {
             console.log(err);
-            $('#wiki .modal-title').replaceWith("Error retrieving data");
+            $("#wiki .modal-title").replaceWith("Error retrieving data");
           },
         });
 
         // economy modal
         var period = $("#periodSelect").val();
         $("#economy").on("show.bs.modal", () => {
-          getEcoData(iso_a3, period)
+          getEcoData(iso_a3, period);
         });
 
         // on changing selected period
         $("#periodSelect").on("change", () => {
           let period = $("#periodSelect").val();
-          getEcoData(iso_a3, period)
-        });       
+          getEcoData(iso_a3, period);
+        });
       },
       error: function (err) {
         // console.log(err.responseText);
-        $('#info .modal-title').replaceWith("Error retrieving data");
+        $("#info .modal-title").text("Error retrieving data");
       },
     });
 
@@ -514,6 +499,7 @@ $(window).on("load", () => {
   });
 });
 
+// convert currency actions
 $("#currency").on("show.bs.modal", () => {
   currConvert();
 });
@@ -619,6 +605,102 @@ function currConvert() {
     },
     error: function (err) {
       console.log(err.responseText);
+    },
+  });
+}
+
+function getWeatherData(capital) {
+  $.ajax({
+    url: "./libs/php/getCountryWeather.php",
+    type: "GET",
+    dataType: "json",
+    data: { capital },
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        if (data.forecast.forecastday.length !== 0) {
+          // today
+          $("#modalLabel").html(
+            data["location"]["name"] + ", " + data["location"]["country"]
+          );
+          $("#todayConditions").html(
+            data["forecast"]["forecastday"][0]["day"]["condition"]["text"]
+          );
+          $("#todayIcon").attr(
+            "src",
+            data["forecast"]["forecastday"][0]["day"]["condition"]["icon"]
+          );
+          $("#todayMaxTemp").html(
+            addWeatherUnit(
+              data["forecast"]["forecastday"][0]["day"]["maxtemp_c"]
+            )
+          );
+          $("#todayMinTemp").html(
+            addWeatherUnit(
+              data["forecast"]["forecastday"][0]["day"]["mintemp_c"]
+            )
+          );
+
+          // day 1
+          $("#day1Date").text(
+            dayjs(data["forecast"]["forecastday"][1]["date"]).format("ddd DD")
+          );
+          $("#day1Icon").attr(
+            "src",
+            data["forecast"]["forecastday"][1]["day"]["condition"]["icon"]
+          );
+          $("#day1MaxTemp").text(
+            addWeatherUnit(
+              data["forecast"]["forecastday"][1]["day"]["maxtemp_c"]
+            )
+          );
+          $("#day1MinTemp").text(
+            addWeatherUnit(
+              data["forecast"]["forecastday"][1]["day"]["mintemp_c"]
+            )
+          );
+
+          // day 2
+          $("#day2Date").text(
+            dayjs(data["forecast"]["forecastday"][2]["date"]).format("ddd DD")
+          );
+          $("#day2Icon").attr(
+            "src",
+            data["forecast"]["forecastday"][2]["day"]["condition"]["icon"]
+          );
+          $("#day2MaxTemp").text(
+            addWeatherUnit(
+              data["forecast"]["forecastday"][2]["day"]["maxtemp_c"]
+            )
+          );
+          $("#day2MinTemp").text(
+            addWeatherUnit(
+              data["forecast"]["forecastday"][2]["day"]["mintemp_c"]
+            )
+          );
+          $("#pre-load").addClass("fadeOut");
+        } else if (data.current) {
+          // today
+          $("#modalLabel").html(
+            data["location"]["name"] + ", " + data["location"]["country"]
+          );
+          $("#todayConditions").html(data["current"]["condition"]["text"]);
+          $("#todayIcon").attr("src", data["current"]["condition"]["icon"]);
+          $("#todayMaxTemp").html(addWeatherUnit(data["current"]["temp_c"]));
+          $("#todayMinTemp").html(
+            addWeatherUnit(data["current"]["feelslike_c"])
+          );
+          $("#day1Date").text("Forecast Data Unavailable");
+          $("#day2Date").text("Forecast Data Unavailable");
+          $("#pre-load").addClass("fadeOut");
+        } else {
+          $("#modalLabel").text("Weather Data Unavailable");
+        }
+      }
+    },
+    error: function (err) {
+      // console.log(err);
+      $("#modalLabel").text("Error retrieving data");
     },
   });
 }
@@ -780,14 +862,28 @@ function getNewsHeadlines(iso_a2) {
     success: ({ status, data }) => {
       if (status.name === "ok") {
         // console.log(data);
-        for (iterator of data.articles) {
-          $("#newsTitle").append(
-            "<div><h5 class='card-title'>" +
-              iterator["title"] +
-              "</h5><a href=" +
-              iterator["url"] +
-              "' target='_blank'>Read more...</a><br><br></div>"
-          );
+        if (data.results.length) {
+          data.results.forEach((article) => {
+            $("#newsTitle").append(
+              "<table class='newsTable'><tr><td rowspan='2' width='50%'><img class='newsImg' src='" +
+                article.image_url +
+                "' alt='' title=''></td><td><a class='newsLink' href='" +
+                article.link +
+                "' target='_blank'>" +
+                article.title +
+                "</a></td></tr><tr><td class='newsBottom'><p class='newsSource'>" +
+                article.source_id +
+                "</p><td></tr></table>"
+            );
+            // add class to news modal elements
+            $(".newsTable").addClass("table table-borderless");
+            $(".newsImg").addClass("img-fluid rounded");
+            $(".newsLink").addClass("fw-bold fs-6 text-dark");
+            $(".newsBottom").addClass("align-bottom pb-0");
+            $(".newsSource").addClass("fw-light fs-6 mb-1");
+          });
+        } else {
+          $("#newsTitle").append("News from this country is unavailable.")
         }
       }
     },
@@ -807,7 +903,7 @@ function clearPrevData() {
   $("#govtrev").html("");
   $("#govtexp").html("");
   $("#govtdebt").html("");
-  $("#newsTitle").html("");
+  $("#newsTitle").empty();
   $("#from").html("");
   $("#to").html("");
   $("#result").html("");
@@ -820,4 +916,10 @@ function clearMarkers() {
   stadiums.clearLayers();
   airports.clearLayers();
   cities.clearLayers();
+  hospitals.clearLayers();
+}
+
+// format weather values
+function addWeatherUnit(number) {
+  return `${number}°c`;
 }
