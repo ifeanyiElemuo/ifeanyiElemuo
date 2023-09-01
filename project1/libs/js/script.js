@@ -125,27 +125,27 @@ var stadiumIcon = L.ExtraMarkers.icon({
 var countryBorders = L.geoJSON().addTo(map);
 
 $(window).on("load", () => {
-  L.easyButton("fa-solid fa-circle-info fa-lg", (btn, map) => {
+  var info = L.easyButton("fa-solid fa-circle-info fa-lg", (btn, map) => {
     $("#info").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-solid fa-globe fa-lg", (btn, map) => {
+  var wiki = L.easyButton("fa-solid fa-globe fa-lg", (btn, map) => {
     $("#wiki").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-solid fa-cloud-sun-rain fa-lg", (btn, map) => {
+  var weather = L.easyButton("fa-solid fa-cloud-sun-rain fa-lg", (btn, map) => {
     $("#weather").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-solid fa-coins fa-lg", (btn, map) => {
+  var currency = L.easyButton("fa-solid fa-coins fa-lg", (btn, map) => {
     $("#currency").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-solid fa-chart-simple fa-lg", (btn, map) => {
+  var economy = L.easyButton("fa-solid fa-chart-simple fa-lg", (btn, map) => {
     $("#economy").modal("show");
   }).addTo(map);
 
-  L.easyButton("fa-solid fa-newspaper fa-lg", (btn, map) => {
+  var news = L.easyButton("fa-solid fa-newspaper fa-lg", (btn, map) => {
     $("#news").modal("show");
   }).addTo(map);
 
@@ -495,6 +495,12 @@ $(window).on("load", () => {
     });
     getNewsHeadlines(iso_a2);
   });
+  fixEasyButtonSize(info);
+  fixEasyButtonSize(wiki);
+  fixEasyButtonSize(weather);
+  fixEasyButtonSize(currency);
+  fixEasyButtonSize(economy);
+  fixEasyButtonSize(news);
 });
 
 // convert currency actions
@@ -676,6 +682,7 @@ function getWeatherData(capital) {
               data["forecast"]["forecastday"][2]["day"]["mintemp_c"]
             )
           );
+          $('#lastUpdated').text(dayjs(data.lastUpdated).format("HH:mm, DD MMM"));
           $("#pre-load").addClass("fadeOut");
         } else if (data.current) {
           // today
@@ -690,6 +697,7 @@ function getWeatherData(capital) {
           );
           $("#day1Date").text("Forecast Data Unavailable");
           $("#day2Date").text("Forecast Data Unavailable");
+          $('#lastUpdated').text(dayjs(data.lastUpdated).format("HH:mm, DD MMM"));
           $("#pre-load").addClass("fadeOut");
         } else {
           $("#modalLabel").text("Weather Data Unavailable");
@@ -920,4 +928,14 @@ function clearMarkers() {
 // format weather values
 function addWeatherUnit(number) {
   return `${number}°c`;
+}
+
+// button display fix for iOS devices
+function fixEasyButtonSize(button) {
+  var buttonElement = button.button;
+  buttonElement.style.padding = '0px';
+  buttonElement.style.width = "26px";
+  buttonElement.style.height = "26px";
+  buttonElement.style.minWidth = "26px";
+  buttonElement.style.minHeight = "26px";
 }
