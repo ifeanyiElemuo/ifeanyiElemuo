@@ -19,6 +19,9 @@ var basemaps = {
 };
 
 const map = L.map("map", {
+  preferCanvas: true,
+  updateWhenZooming: false,
+  updateWhenIdle: true,
   layers: [streets],
 }).fitWorld();
 
@@ -493,7 +496,7 @@ $(window).on("load", () => {
         console.log(err.responseText);
       },
     });
-    getNewsHeadlines(iso_a2);
+    // getNewsHeadlines(iso_a2);
   });
   fixEasyButtonSize(info);
   fixEasyButtonSize(wiki);
