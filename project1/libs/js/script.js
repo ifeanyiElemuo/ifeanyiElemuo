@@ -102,13 +102,12 @@ var universityIcon = L.ExtraMarkers.icon({
   prefix: "fa-solid",
   icon: "fa-graduation-cap",
   iconColor: "gold",
-  markerColor: "navy",
   shape: "square",
 });
 
 var hospitalIcon = L.ExtraMarkers.icon({
   prefix: "fa-solid",
-  icon: "fa-square-h",
+  icon: "fa-square-h fa-xl",
   iconColor: "white",
   markerColor: "red",
   shape: "circle",
@@ -117,6 +116,7 @@ var hospitalIcon = L.ExtraMarkers.icon({
 var stadiumIcon = L.ExtraMarkers.icon({
   prefix: "fa-solid",
   icon: "fa-futbol",
+  iconColor: "white",
   markerColor: "green",
   shape: "square",
 });
@@ -163,7 +163,6 @@ $(window).on("load", () => {
   countrySelect.change(() => {
     // remove existing layers
     countryBorders.clearLayers();
-    // markers.clearLayers();
     clearMarkers();
     clearPrevData();
 
@@ -171,7 +170,6 @@ $(window).on("load", () => {
     // console.log(iso_a2);
 
     highlightBorders(iso_a2);
-    getNewsHeadlines(iso_a2);
 
     // find nearby cities
     $.ajax({
@@ -365,7 +363,6 @@ $(window).on("load", () => {
                       "' target='_blank'>Wikipedia Page...</a>"
                   );
                 }
-                // $("#wikiImg").addClass("img-fluid rounded");
               }
             }
           },
@@ -496,6 +493,7 @@ $(window).on("load", () => {
         console.log(err.responseText);
       },
     });
+    getNewsHeadlines(iso_a2);
   });
 });
 
