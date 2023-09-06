@@ -12,7 +12,7 @@
 
 	$executionStartTime = microtime(true);
 
-	$url='http://api.geonames.org/searchJSON?q=stadium&country=' . $_REQUEST['iso_a2'] . '&username=' . $username .'&style=full';
+	$url='http://api.geonames.org/searchJSON?q=stadium&country=' . $_REQUEST['iso_a2'] . '&maxRows=10' . '&username=' . $username .'&style=full';
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

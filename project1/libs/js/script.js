@@ -496,7 +496,7 @@ $(window).on("load", () => {
         console.log(err.responseText);
       },
     });
-    // getNewsHeadlines(iso_a2);
+    getNewsHeadlines(iso_a2);
   });
   fixEasyButtonSize(info);
   fixEasyButtonSize(wiki);
@@ -874,22 +874,16 @@ function getNewsHeadlines(iso_a2) {
         if (data.results.length) {
           data.results.forEach((article) => {
             $("#newsTitle").append(
-              "<table class='newsTable'><tr><td rowspan='2' width='50%'><img class='newsImg' src='" +
+              "<table class='table table-borderless'><tr><td rowspan='2' width='50%'><img class='img-fluid rounded' src='" +
                 article.image_url +
-                "' alt='' title=''></td><td><a class='newsLink' href='" +
+                "' alt='' title=''></td><td><a class='fw-bold fs-6 text-dark' href='" +
                 article.link +
                 "' target='_blank'>" +
                 article.title +
-                "</a></td></tr><tr><td class='newsBottom'><p class='newsSource'>" +
+                "</a></td></tr><tr><td class='align-bottom pb-0'><p class='fw-light fs-6 mb-1'>" +
                 article.source_id +
                 "</p><td></tr></table>"
             );
-            // add class to news modal elements
-            $(".newsTable").addClass("table table-borderless");
-            $(".newsImg").addClass("img-fluid rounded");
-            $(".newsLink").addClass("fw-bold fs-6 text-dark");
-            $(".newsBottom").addClass("align-bottom pb-0");
-            $(".newsSource").addClass("fw-light fs-6 mb-1");
           });
         } else {
           $("#newsTitle").append("News from this country is unavailable.")
