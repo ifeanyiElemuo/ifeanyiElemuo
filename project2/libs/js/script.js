@@ -4,8 +4,48 @@ $(window).on("load", () => {
   getAllLocations();
 });
 
+$(document).ready(function () {
+  // clear search input
+  $("#personnelBtn").click(() => {
+    $("#searchInp").val("");
+    getAllPersonnel();
+  });
+
+  $("#departmentsBtn").click(() => {
+    $("#searchInp").val("");
+    getAllDepartments();
+  });
+
+  $("#locationsBtn").click(() => {
+    $("#searchInp").val("");
+    getAllLocations();
+  });
+
+  // to search personnel, departments, and locations
+  $("#searchInp").on("keyup", function () {
+    var value = $(this).val().toLowerCase();
+    $("#personnelTable tr ").filter(function () {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
+    $("#deptTable tr ").filter(function () {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
+    $("#locationsTable tr ").filter(function () {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
+  });
+
+  $("#refreshBtn").click(() => {
+    getAllPersonnel();
+    getAllDepartments();
+    getAllLocations();
+  });
+});
+
 // get all personnel
 function getAllPersonnel() {
+  $("#personnelTable").html("");
+  showSpinner();
   $.ajax({
     url: "./libs/php/getAll.php",
     type: "GET",
@@ -27,6 +67,8 @@ function getAllPersonnel() {
               person.email +
               "</td><td class='text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm edit-personnel-toggle-modal' data-bs-toggle='modal' data-bs-target='#editPersonnelModal' data-id='" +
               person.id +
+              "' dept-id='" +
+              person.departmentID +
               "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn' data-id='" +
               person.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
@@ -35,8 +77,10 @@ function getAllPersonnel() {
 
         $(".edit-personnel-toggle-modal").click(function () {
           getPersonnelByID($(this).attr("data-id"));
+          $("#editPersonnelDepartment").val($(this).attr("dept-id"));
         });
       }
+      hideSpinner();
     },
     error: function (err) {
       console.log(err);
@@ -46,6 +90,7 @@ function getAllPersonnel() {
 
 // get all departments
 function getAllDepartments() {
+  $("#deptTable").html("");
   $.ajax({
     url: "./libs/php/getAllDepartments.php",
     type: "GET",
@@ -58,7 +103,9 @@ function getAllDepartments() {
             "<tr><td class='align-middle text-nowrap'>" +
               department.name +
               "</td>" +
-              "<td class='align-middle text-nowrap d-none d-md-table-cell'></td>" +
+              "<td class='align-middle text-nowrap d-none d-md-table-cell'>" +
+              department.location +
+              "</td>" +
               "<td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editDepartmentModal' data-id='" +
               department.id +
               "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn' data-id='" +
@@ -84,6 +131,7 @@ function getAllDepartments() {
 
 // get all locations
 function getAllLocations() {
+  $("#locationsTable").html("");
   $.ajax({
     url: "./libs/php/getAllLocations.php",
     type: "GET",
@@ -144,4 +192,14 @@ function getLocationByID(locationId) {
       }
     },
   });
+}
+
+// Function to show the spinner
+function showSpinner() {
+    $('#pre-load').removeClass("fadeOut");
+}
+
+// Function to hide the spinner
+function hideSpinner() {
+    $('#pre-load').addClass("fadeOut");
 }
