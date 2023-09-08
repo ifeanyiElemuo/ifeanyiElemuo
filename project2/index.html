@@ -226,13 +226,13 @@
               <button
                 type="submit"
                 form="editPersonnelForm"
-                class="btn btn-outline-primary btn-sm myBtn"
+                class="btn btn-outline-success btn-sm myBtn"
               >
                 SAVE
               </button>
               <button
                 type="button"
-                class="btn btn-outline-primary btn-sm myBtn"
+                class="btn btn-outline-danger btn-sm myBtn"
                 data-bs-dismiss="modal"
               >
                 CANCEL
@@ -240,7 +240,171 @@
             </div>
           </div>
         </div>
-        <select name="" id=""></select>
+      </div>
+
+      <!-- delete personnel modal -->
+      <div
+        id="deletePersonnelModal"
+        class="modal fade"
+        tabindex="-1"
+        data-bs-backdrop="false"
+        data-bs-keyboard="false"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
+        >
+          <div class="modal-content shadow">
+            <div class="modal-header bg-danger bg-gradient text-white">
+              <h5 class="modal-title">Delete employee</h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div class="modal-body">
+              <p>Are you sure you want to delete employee data?</p>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="submit"
+                class="btn btn-outline-success btn-sm myBtn"
+              >
+                YES
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm myBtn"
+                data-bs-dismiss="modal"
+              >
+                NO
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- edit department modal -->
+      <div
+        id="editDepartmentModal"
+        class="modal fade"
+        tabindex="-1"
+        data-bs-backdrop="false"
+        data-bs-keyboard="false"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
+        >
+          <div class="modal-content shadow">
+            <div class="modal-header bg-primary bg-gradient text-white">
+              <h5 class="modal-title">Edit department</h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div class="modal-body">
+              <form id="editDepartmentForm">
+                <input type="hidden" id="editDepartmentID" />
+
+                <div class="form-floating mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editDepartmentName"
+                    placeholder="Department name"
+                    required
+                  />
+                  <label for="editDepartmentName">Department name</label>
+                </div>
+
+                <div class="form-floating">
+                  <select
+                    class="form-select"
+                    id="editDepartmentLocation"
+                    placeholder="Location"
+                  ></select>
+                  <label for="editDepartmentLocation">Location</label>
+                </div>
+              </form>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="submit"
+                form="editPersonnelForm"
+                class="btn btn-outline-success btn-sm myBtn"
+              >
+                SAVE
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm myBtn"
+                data-bs-dismiss="modal"
+              >
+                CANCEL
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- delete department modal -->
+      <div
+        id="deleteDepartmentModal"
+        class="modal fade"
+        tabindex="-1"
+        data-bs-backdrop="false"
+        data-bs-keyboard="false"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
+        >
+          <div class="modal-content shadow">
+            <div class="modal-header bg-danger bg-gradient text-white">
+              <h5 class="modal-title">Delete department</h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div class="modal-body">
+              <p>Are you sure you want to delete this department?</p>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="submit"
+                form="editPersonnelForm"
+                class="btn btn-outline-success btn-sm myBtn"
+              >
+                YES
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm myBtn"
+                data-bs-dismiss="modal"
+              >
+                NO
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </body>

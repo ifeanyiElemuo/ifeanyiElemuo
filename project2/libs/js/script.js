@@ -65,17 +65,17 @@ function getAllPersonnel() {
               person.location +
               "</td><td class='align-middle text-nowrap d-none d-md-table-cell'>" +
               person.email +
-              "</td><td class='text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm edit-personnel-toggle-modal' data-bs-toggle='modal' data-bs-target='#editPersonnelModal' data-id='" +
+              "</td><td class='text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm editPersonnelBtn' data-bs-toggle='modal' data-bs-target='#editPersonnelModal' data-id='" +
               person.id +
               "' dept-id='" +
               person.departmentID +
-              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn' data-id='" +
+              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn'data-bs-toggle='modal' data-bs-target='#deletePersonnelModal' data-id='" +
               person.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
           );
         });
 
-        $(".edit-personnel-toggle-modal").click(function () {
+        $(".editPersonnelBtn").click(function () {
           getPersonnelByID($(this).attr("data-id"));
           $("#editPersonnelDepartment").val($(this).attr("dept-id"));
         });
@@ -106,9 +106,11 @@ function getAllDepartments() {
               "<td class='align-middle text-nowrap d-none d-md-table-cell'>" +
               department.location +
               "</td>" +
-              "<td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editDepartmentModal' data-id='" +
+              "<td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm editDepartmentBtn' data-bs-toggle='modal' data-bs-target='#editDepartmentModal' data-id='" +
               department.id +
-              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn' data-id='" +
+              "' location-id='" +
+              department.locationID +
+              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deleteDepartmentBtn' data-bs-toggle='modal' data-bs-target='#deleteDepartmentModal' data-id='" +
               department.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
           );
@@ -120,6 +122,10 @@ function getAllDepartments() {
               department.name +
               "</option>"
           );
+        });
+        $(".editDepartmentBtn").click(function () {
+          getDepartmentByID($(this).attr("data-id"));
+          $("#editDepartmentLocation").val($(this).attr("location-id"));
         });
       }
     },
@@ -148,6 +154,10 @@ function getAllLocations() {
               "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn' data-id='" +
               location.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
+          );
+          // edit personnel department dropdown
+          $("#editDepartmentLocation").append(
+            "<option value='" + location.id + "'>" + location.name + "</option>"
           );
         });
       }
@@ -178,17 +188,18 @@ function getPersonnelByID(id) {
   });
 }
 
-// get location by ID
-function getLocationByID(locationId) {
+// get department by ID
+function getDepartmentByID(id) {
   $.ajax({
-    url: "./libs/php/getLocationByID.php",
+    url: "./libs/php/getDepartmentByID.php",
     type: "GET",
     dataType: "json",
-    data: { locationId },
+    data: { id },
     success: ({ status, data }) => {
       if (status.name === "ok") {
         // console.log(data);
-        return data;
+        var department = data[0];
+        $("#editDepartmentName").val(department.name);
       }
     },
   });
@@ -196,10 +207,10 @@ function getLocationByID(locationId) {
 
 // Function to show the spinner
 function showSpinner() {
-    $('#pre-load').removeClass("fadeOut");
+  $("#pre-load").removeClass("fadeOut");
 }
 
 // Function to hide the spinner
 function hideSpinner() {
-    $('#pre-load').addClass("fadeOut");
+  $("#pre-load").addClass("fadeOut");
 }
