@@ -2,6 +2,7 @@ $(window).on("load", () => {
   getAllPersonnel();
   getAllDepartments();
   getAllLocations();
+  getDepartmentCountByID(1);
 });
 
 $(document).ready(function () {
@@ -35,10 +36,40 @@ $(document).ready(function () {
     });
   });
 
+  // referesh directory
   $("#refreshBtn").click(() => {
     getAllPersonnel();
     getAllDepartments();
     getAllLocations();
+  });
+});
+
+// clear alert message
+$("#alertOK").click(() => {
+    $("#alertMessage").html("");
+})
+
+// add new department
+$("#newDepartmentForm").submit(function (event) {
+  event.preventDefault(); // prevents form submitting
+
+  // get form inputs
+  var name = $("#newDepartmentName").val();
+  var locationID = $("#newDepartmentLocation").val();
+
+  $.ajax({
+    url: "./libs/php/insertDepartment.php",
+    type: "POST",
+    data: { name, locationID },
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        $("#alertMessage").html("<p>New department added!</p>");
+        $("#newDepartmentForm")[0].reset();
+      }
+    },
+    error: function (err) {
+      console.log(err);
+    },
   });
 });
 
@@ -76,7 +107,9 @@ function getAllPersonnel() {
         });
 
         $(".editPersonnelBtn").click(function () {
+          // fills form with selected personnel data
           getPersonnelByID($(this).attr("data-id"));
+          // select personnel department option from dropdown
           $("#editPersonnelDepartment").val($(this).attr("dept-id"));
         });
       }
@@ -114,6 +147,16 @@ function getAllDepartments() {
               department.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
           );
+
+          // add personnel department dropdown
+          $("#newPersonnelDepartment").append(
+            "<option value='" +
+              department.id +
+              "'>" +
+              department.name +
+              "</option>"
+          );
+
           // edit personnel department dropdown
           $("#editPersonnelDepartment").append(
             "<option value='" +
@@ -124,7 +167,9 @@ function getAllDepartments() {
           );
         });
         $(".editDepartmentBtn").click(function () {
+          // fills form with selected department name
           getDepartmentByID($(this).attr("data-id"));
+          //selects department location from dropdown
           $("#editDepartmentLocation").val($(this).attr("location-id"));
         });
       }
@@ -149,16 +194,25 @@ function getAllLocations() {
           $("#locationsTable").append(
             "<tr><td class='align-middle text-nowrap'>" +
               location.name +
-              "</td><td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editPersonnelModal' data-id='" +
+              "</td><td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm editLocationBtn' data-bs-toggle='modal' data-bs-target='#editLocationModal' data-id='" +
               location.id +
-              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn' data-id='" +
+              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deleteLocationBtn' data-bs-toggle='modal' data-bs-target='#deleteLocationModal' data-id='" +
               location.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
           );
-          // edit personnel department dropdown
+          // add new department dropdown
+          $("#newDepartmentLocation").append(
+            "<option value='" + location.id + "'>" + location.name + "</option>"
+          );
+
+          // edit department location dropdown
           $("#editDepartmentLocation").append(
             "<option value='" + location.id + "'>" + location.name + "</option>"
           );
+        });
+        $(".editLocationBtn").click(function () {
+          // fills form with selected location name
+          getLocationByID($(this).attr("data-id"));
         });
       }
     },
@@ -205,12 +259,46 @@ function getDepartmentByID(id) {
   });
 }
 
-// Function to show the spinner
+// get location by ID
+function getLocationByID(id) {
+  $.ajax({
+    url: "./libs/php/getLocationByID.php",
+    type: "GET",
+    dataType: "json",
+    data: { id },
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        //   console.log(data);
+        var location = data[0];
+        $("#editLocationName").val(location.name);
+      }
+    },
+  });
+}
+
+// get department count by ID
+function getDepartmentCountByID(id) {
+  $.ajax({
+    url: "./libs/php/getDepartmentCountByID.php",
+    type: "GET",
+    dataType: "json",
+    data: { id },
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        //   console.log(data);
+        var departmentCount = data[0].departmentCount;
+        return departmentCount;
+      }
+    },
+  });
+}
+
+// show loading spinner
 function showSpinner() {
   $("#pre-load").removeClass("fadeOut");
 }
 
-// Function to hide the spinner
+// hide loading spinner
 function hideSpinner() {
   $("#pre-load").addClass("fadeOut");
 }
