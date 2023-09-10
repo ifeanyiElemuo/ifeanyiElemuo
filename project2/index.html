@@ -267,7 +267,6 @@
                     class="form-control"
                     id="newPersonnelJobTitle"
                     placeholder="Job title"
-                    required
                   />
                   <label for="newPersonnelJobTitle">Job Title</label>
                 </div>
@@ -299,6 +298,8 @@
                 type="submit"
                 form="newPersonnelForm"
                 class="btn btn-outline-success btn-sm myBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#alertModal"
               >
                 ADD
               </button>
@@ -441,9 +442,7 @@
               ></button>
             </div>
 
-            <div class="modal-body">
-              <p>Are you sure you want to delete employee data?</p>
-            </div>
+            <div id="deletePersonnelResponse" class="modal-body"></div>
 
             <div class="modal-footer">
               <button
@@ -613,7 +612,7 @@
         tabindex="-1"
         data-bs-backdrop="false"
         data-bs-keyboard="false"
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby="deleteDepartmentModalLabel"
         aria-hidden="true"
       >
         <div
@@ -621,7 +620,7 @@
         >
           <div class="modal-content shadow">
             <div class="modal-header bg-danger bg-gradient text-white">
-              <h5 class="modal-title">Delete department?</h5>
+              <h5 id="delDeptModalTitle" class="modal-title"></h5>
               <button
                 type="button"
                 class="btn-close btn-close-white"
@@ -630,14 +629,15 @@
               ></button>
             </div>
 
-            <div class="modal-body">
-              <p>Are you sure you want to delete this department?</p>
-            </div>
+            <div id="deleteDepartmentResponse" class="modal-body"></div>
 
-            <div class="modal-footer">
+            <div id="deleteDeptFooter" class="modal-footer">
               <button
-                type="submit"
+                id="confirmDelDept"
+                type="button"
                 class="btn btn-outline-success btn-sm myBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#alertModal"
               >
                 YES
               </button>
@@ -836,7 +836,7 @@
           class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
         >
           <div class="modal-content shadow">
-            <div class="modal-header bg-info bg-gradient text-white">
+            <div class="modal-header bg-success bg-gradient text-white">
               <h5 class="modal-title">Alert</h5>
               <button
                 type="button"

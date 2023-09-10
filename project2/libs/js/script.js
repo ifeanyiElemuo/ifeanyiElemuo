@@ -1,8 +1,5 @@
 $(window).on("load", () => {
-  getAllPersonnel();
-  getAllDepartments();
-  getAllLocations();
-  getDepartmentCountByID(1);
+  referesh();
 });
 
 $(document).ready(function () {
@@ -38,16 +35,39 @@ $(document).ready(function () {
 
   // referesh directory
   $("#refreshBtn").click(() => {
-    getAllPersonnel();
-    getAllDepartments();
-    getAllLocations();
+    referesh();
   });
 });
 
-// clear alert message
-$("#alertOK").click(() => {
-    $("#alertMessage").html("");
-})
+// add new personnel
+$("#newPersonnelForm").submit(function (event) {
+  event.preventDefault(); // prevents form submitting
+
+  // get form inputs
+  var firstName = $("#newPersonnelFirstName").val();
+  var lastName = $("#newPersonnelLastName").val();
+  var jobTitle = $("#newPersonnelJobTitle").val();
+  var email = $("#newPersonnelEmailAddress").val();
+  var departmentID = $("#newPersonnelDepartment").val();
+
+  $.ajax({
+    url: "./libs/php/insertPersonnel.php",
+    type: "POST",
+    data: { firstName, lastName, jobTitle, email, departmentID },
+    success: ({ status }) => {
+      if (status.name === "ok") {
+        referesh();
+        $("#alertMessage").html("<p>New personnel added!</p>");
+        $("#newPersonnelForm")[0].reset();
+        clearAlertMessage();
+      }
+    },
+    error: function (err) {
+      console.log(err.responseText);
+      $("#alertMessage").html("<p>Error adding new personnel!</p>");
+    },
+  });
+});
 
 // add new department
 $("#newDepartmentForm").submit(function (event) {
@@ -61,10 +81,12 @@ $("#newDepartmentForm").submit(function (event) {
     url: "./libs/php/insertDepartment.php",
     type: "POST",
     data: { name, locationID },
-    success: ({ status, data }) => {
+    success: ({ status }) => {
       if (status.name === "ok") {
+        referesh();
         $("#alertMessage").html("<p>New department added!</p>");
         $("#newDepartmentForm")[0].reset();
+        clearAlertMessage();
       }
     },
     error: function (err) {
@@ -100,7 +122,7 @@ function getAllPersonnel() {
               person.id +
               "' dept-id='" +
               person.departmentID +
-              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn'data-bs-toggle='modal' data-bs-target='#deletePersonnelModal' data-id='" +
+              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn' data-bs-toggle='modal' data-bs-target='#deletePersonnelModal' data-id='" +
               person.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
           );
@@ -111,6 +133,29 @@ function getAllPersonnel() {
           getPersonnelByID($(this).attr("data-id"));
           // select personnel department option from dropdown
           $("#editPersonnelDepartment").val($(this).attr("dept-id"));
+        });
+
+        $(".deletePersonnelBtn").click(function () {
+          var id = $(this).attr("data-id");
+          $.ajax({
+            url: "./libs/php/getPersonnelByID.php",
+            type: "GET",
+            dataType: "json",
+            data: { id },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                var person = data.personnel[0];
+                $("#deletePersonnelResponse").html(
+                  "<p>Are you sure you want to delete <strong>" +
+                    person.lastName +
+                    ", " +
+                    person.firstName +
+                    "</strong> from the employee directory?</p>"
+                );
+              }
+            },
+          });
         });
       }
       hideSpinner();
@@ -166,11 +211,64 @@ function getAllDepartments() {
               "</option>"
           );
         });
+
         $(".editDepartmentBtn").click(function () {
           // fills form with selected department name
           getDepartmentByID($(this).attr("data-id"));
           //selects department location from dropdown
           $("#editDepartmentLocation").val($(this).attr("location-id"));
+        });
+
+        // to delete department
+        // get department employee count by ID
+        $(".deleteDepartmentBtn").click(function () {
+          var id = $(this).attr("data-id");
+          $.ajax({
+            url: "./libs/php/getDepartmentCountByID.php",
+            type: "GET",
+            dataType: "json",
+            data: { id },
+            success: ({ status, data }) => {
+              if (status.name === "ok") {
+                //   console.log(data);
+                var departmentCount = data[0].departmentCount;
+                var departmentName = data[0].departmentName;
+                if (departmentCount === 0) {
+                  $("#delDeptModalTitle").text("Delete department?");
+                  $("#deleteDeptFooter").show();
+                  $("#deleteDepartmentResponse").html(
+                    "<p>Are you sure you want to delete this department?</p>"
+                  );
+                } else {
+                  $("#delDeptModalTitle").text("Request denied!");
+                  $("#deleteDeptFooter").hide();
+                  $("#deleteDepartmentResponse").html(
+                    "<p><strong>" +
+                      departmentName +
+                      "</strong> has <strong>" +
+                      departmentCount +
+                      "</strong> employee(s) and cannot be deleted!</p>"
+                  );
+                }
+              }
+            },
+          });
+          // to confirm delete department action
+          //   $("#confirmDelDept").click(function () {
+          //     $.ajax({
+          //       url: "./libs/php/deleteDepartmentByID.php",
+          //       type: "POST",
+          //       data: { id },
+          //       success: ({ status, data }) => {
+          //         if (status.name === "ok") {
+          //           //   console.log(data);
+          //           referesh();
+          //           $("#alertMessage").html("<p>Department deleted!</p>");
+          //           clearAlertMessage();
+          //         }
+          //       },
+          //     });
+          //   });
         });
       }
     },
@@ -276,20 +374,17 @@ function getLocationByID(id) {
   });
 }
 
-// get department count by ID
-function getDepartmentCountByID(id) {
-  $.ajax({
-    url: "./libs/php/getDepartmentCountByID.php",
-    type: "GET",
-    dataType: "json",
-    data: { id },
-    success: ({ status, data }) => {
-      if (status.name === "ok") {
-        //   console.log(data);
-        var departmentCount = data[0].departmentCount;
-        return departmentCount;
-      }
-    },
+// referesh table contents
+function referesh() {
+  getAllPersonnel();
+  getAllDepartments();
+  getAllLocations();
+}
+
+// clear alert message
+function clearAlertMessage() {
+  $("#alertOK").click(() => {
+    $("#alertMessage").html("");
   });
 }
 
