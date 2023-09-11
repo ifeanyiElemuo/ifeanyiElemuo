@@ -341,7 +341,7 @@
 
             <div class="modal-body">
               <form id="editPersonnelForm">
-                <input type="hidden" id="editPersonnelEmployeeID" />
+                <input type="hidden" id="editPersonnelID" />
 
                 <div class="form-floating mb-3">
                   <input
@@ -371,7 +371,6 @@
                     class="form-control"
                     id="editPersonnelJobTitle"
                     placeholder="Job title"
-                    required
                   />
                   <label for="editPersonnelJobTitle">Job Title</label>
                 </div>
@@ -403,6 +402,8 @@
                 type="submit"
                 form="editPersonnelForm"
                 class="btn btn-outline-success btn-sm myBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#alertModal"
               >
                 SAVE
               </button>
@@ -590,6 +591,8 @@
                 type="submit"
                 form="editDepartmentForm"
                 class="btn btn-outline-success btn-sm myBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#alertModal"
               >
                 SAVE
               </button>

@@ -69,31 +69,64 @@ $("#newPersonnelForm").submit(function (event) {
   });
 });
 
-// add new department
-$("#newDepartmentForm").submit(function (event) {
+// edit personnel by ID
+$("#editPersonnelForm").submit(function (event) {
   event.preventDefault(); // prevents form submitting
 
   // get form inputs
-  var name = $("#newDepartmentName").val();
-  var locationID = $("#newDepartmentLocation").val();
+  var firstName = $("#editPersonnelFirstName").val();
+  var lastName = $("#editPersonnelLastName").val();
+  var jobTitle = $("#editPersonnelJobTitle").val();
+  var email = $("#editPersonnelEmailAddress").val();
+  var departmentID = $("#editPersonnelDepartment").val();
+  var editPersonnelID = $("#editPersonnelID").val();
 
   $.ajax({
-    url: "./libs/php/insertDepartment.php",
+    url: "./libs/php/editPersonnelByID.php",
     type: "POST",
-    data: { name, locationID },
+    data: {
+      firstName,
+      lastName,
+      jobTitle,
+      email,
+      departmentID,
+      editPersonnelID,
+    },
     success: ({ status }) => {
       if (status.name === "ok") {
         referesh();
-        $("#alertMessage").html("<p>New department added!</p>");
-        $("#newDepartmentForm")[0].reset();
+        $("#alertMessage").html("<p>Updated personnel data successfully!</p>");
+        $("#editPersonnelForm")[0].reset();
         clearAlertMessage();
       }
     },
     error: function (err) {
-      console.log(err);
+      console.log(err.responseText);
+      $("#alertMessage").html("<p>Error updating personnel data!</p>");
     },
   });
 });
+
+// get personnel by ID
+function getPersonnelByID(id) {
+  $.ajax({
+    url: "./libs/php/getPersonnelByID.php",
+    type: "GET",
+    dataType: "json",
+    data: { id },
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        var person = data.personnel[0];
+        $("#editPersonnelID").val(person.id);
+        $("#editPersonnelFirstName").val(person.firstName);
+        $("#editPersonnelLastName").val(person.lastName);
+        $("#editPersonnelEmailAddress").val(person.email);
+        $("#editPersonnelJobTitle").val(person.jobTitle);
+      }
+    },
+  });
+}
 
 // get all personnel
 function getAllPersonnel() {
@@ -135,33 +168,105 @@ function getAllPersonnel() {
           $("#editPersonnelDepartment").val($(this).attr("dept-id"));
         });
 
-        $(".deletePersonnelBtn").click(function () {
-          var id = $(this).attr("data-id");
-          $.ajax({
-            url: "./libs/php/getPersonnelByID.php",
-            type: "GET",
-            dataType: "json",
-            data: { id },
-            success: ({ status, data }) => {
-              if (status.name === "ok") {
-                // console.log(data);
-                var person = data.personnel[0];
-                $("#deletePersonnelResponse").html(
-                  "<p>Are you sure you want to delete <strong>" +
-                    person.lastName +
-                    ", " +
-                    person.firstName +
-                    "</strong> from the employee directory?</p>"
-                );
-              }
-            },
-          });
-        });
+        // $(".deletePersonnelBtn").click(function () {
+        //   var id = $(this).attr("data-id");
+        //   $.ajax({
+        //     url: "./libs/php/getPersonnelByID.php",
+        //     type: "GET",
+        //     dataType: "json",
+        //     data: { id },
+        //     success: ({ status, data }) => {
+        //       if (status.name === "ok") {
+        //         // console.log(data);
+        //         var person = data.personnel[0];
+        //         $("#deletePersonnelResponse").html(
+        //           "<p>Are you sure you want to delete <strong>" +
+        //             person.lastName +
+        //             ", " +
+        //             person.firstName +
+        //             "</strong> from the employee directory?</p>"
+        //         );
+        //       }
+        //     },
+        //   });
+        // });
       }
       hideSpinner();
     },
     error: function (err) {
       console.log(err);
+    },
+  });
+}
+
+// add new department
+$("#newDepartmentForm").submit(function (event) {
+  event.preventDefault(); // prevents form submitting
+
+  // get form inputs
+  var name = $("#newDepartmentName").val();
+  var locationID = $("#newDepartmentLocation").val();
+
+  $.ajax({
+    url: "./libs/php/insertDepartment.php",
+    type: "POST",
+    data: { name, locationID },
+    success: ({ status }) => {
+      if (status.name === "ok") {
+        referesh();
+        $("#alertMessage").html("<p>New department added!</p>");
+        $("#newDepartmentForm")[0].reset();
+        clearAlertMessage();
+      }
+    },
+    error: function (err) {
+      console.log(err);
+    },
+  });
+});
+
+// edit department by ID
+$("#editDepartmentForm").submit(function (event) {
+  event.preventDefault(); // prevents form submitting
+
+  // get form inputs
+  var departmentID = $("#editDepartmentID").val();
+  var departmentName = $("#editDepartmentName").val();
+  var locationID = $("#editDepartmentLocation").val();
+
+  $.ajax({
+    url: "./libs/php/editDepartmentByID.php",
+    type: "POST",
+    data: { departmentID, departmentName, locationID },
+    success: ({ status }) => {
+      if (status.name === "ok") {
+        referesh();
+        $("#alertMessage").html("<p>Updated department data successfully!</p>");
+        $("#editDepartmentForm")[0].reset();
+        clearAlertMessage();
+      }
+    },
+    error: function (err) {
+      console.log(err.responseText);
+      $("#alertMessage").html("<p>Error updating department data!</p>");
+    },
+  });
+});
+
+// get department by ID
+function getDepartmentByID(id) {
+  $.ajax({
+    url: "./libs/php/getDepartmentByID.php",
+    type: "GET",
+    dataType: "json",
+    data: { id },
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        var department = data[0];
+        $("#editDepartmentID").val(department.id);
+        $("#editDepartmentName").val(department.name);
+      }
     },
   });
 }
@@ -316,43 +421,6 @@ function getAllLocations() {
     },
     error: function (err) {
       console.log(err);
-    },
-  });
-}
-
-// get personnel by ID
-function getPersonnelByID(id) {
-  $.ajax({
-    url: "./libs/php/getPersonnelByID.php",
-    type: "GET",
-    dataType: "json",
-    data: { id },
-    success: ({ status, data }) => {
-      if (status.name === "ok") {
-        // console.log(data);
-        var person = data.personnel[0];
-        $("#editPersonnelFirstName").val(person.firstName);
-        $("#editPersonnelLastName").val(person.lastName);
-        $("#editPersonnelEmailAddress").val(person.email);
-        $("#editPersonnelJobTitle").val(person.jobTitle);
-      }
-    },
-  });
-}
-
-// get department by ID
-function getDepartmentByID(id) {
-  $.ajax({
-    url: "./libs/php/getDepartmentByID.php",
-    type: "GET",
-    dataType: "json",
-    data: { id },
-    success: ({ status, data }) => {
-      if (status.name === "ok") {
-        // console.log(data);
-        var department = data[0];
-        $("#editDepartmentName").val(department.name);
-      }
     },
   });
 }
