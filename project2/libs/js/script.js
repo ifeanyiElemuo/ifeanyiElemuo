@@ -81,12 +81,11 @@ function getPersonnelByID(id) {
     .then(({ status, data }) => {
       if (status.name === "ok") {
         return data;
-      }
-      throw new Error("Failed to fetch personnel data");
+      } else throw new Error("Failed to fetch personnel data");
     })
-    .fail((jqXHR, textStatus, errorThrown) => {
-      console.error("Error:", textStatus, errorThrown);
-      throw errorThrown;
+    .catch((error) => {
+      console.log(error.responseText);
+      throw error;
     });
 }
 
@@ -231,9 +230,11 @@ $("#deletePersonnelForm").submit(function (event) {
       $("#alertMessage").html("<p>Error deleting personnel!</p>");
     },
   });
+  $("#deletePersonnelID").empty();
+  $("p").remove(".deletePersonnelPrompt");
 });
 
-// stop delete
+// stop personnel delete
 $(".stopPersonnelDelete").click(function () {
   $("#deletePersonnelID").empty();
   $("p").remove(".deletePersonnelPrompt");
@@ -269,20 +270,22 @@ $("#newDepartmentForm").submit(function (event) {
 
 // get department by ID
 function getDepartmentByID(id) {
-  $.ajax({
+  return $.ajax({
     url: "./libs/php/getDepartmentByID.php",
     type: "GET",
     dataType: "json",
     data: { id },
-    success: ({ status, data }) => {
+  })
+    .then(({ status, data }) => {
       if (status.name === "ok") {
-        // console.log(data);
-        var department = data[0];
-        $("#editDepartmentID").val(department.id);
-        $("#editDepartmentName").val(department.name);
+        return data;
       }
-    },
-  });
+      throw new Error("Failed to fetch department data");
+    })
+    .catch((error) => {
+      console.log(error.responseText);
+      throw error;
+    });
 }
 
 // get all departments
@@ -315,7 +318,16 @@ function getAllDepartments() {
 
         $(".editDepartmentBtn").click(function () {
           // fills form with selected department name
-          getDepartmentByID($(this).attr("data-id"));
+          getDepartmentByID($(this).attr("data-id"))
+            .then((data) => {
+              //   console.log(data);
+              var department = data[0];
+              $("#editDepartmentID").val(department.id);
+              $("#editDepartmentName").val(department.name);
+            })
+            .catch((error) => {
+              console.log(error.responseText);
+            });
           //selects department location from dropdown
           $("#editDepartmentLocation").val($(this).attr("location-id"));
         });
@@ -329,7 +341,8 @@ function getAllDepartments() {
             type: "GET",
             dataType: "json",
             data: { id },
-            success: ({ status, data }) => {
+          })
+            .then(({ status, data }) => {
               if (status.name === "ok") {
                 // console.log(data);
                 var departmentID = data[0].id;
@@ -342,16 +355,26 @@ function getAllDepartments() {
                   $("#delDeptModalTitle").text("Request denied!");
                   $("#deleteDeptFooter").hide();
                   $("#deleteDepartmentForm").append(
-                    "<p><strong>" +
+                    "<p class='deleteDepartmentPrompt'><strong>" +
                       departmentName +
                       "</strong> has <strong>" +
                       departmentCount +
                       "</strong> employee(s) and cannot be deleted!</p>"
                   );
+                } else {
+                  $("#deleteDeptFooter").show();
+                  $("#deleteDepartmentForm").append(
+                    "<p class='deleteDepartmentPrompt'>Are you sure you want to delete <strong>" +
+                      departmentName +
+                      "</strong> from the directory?</p>"
+                  );
                 }
-              }
-            },
-          });
+              } else throw new Error("Failed to fetch department count");
+            })
+            .catch((error) => {
+              console.log(error);
+              throw error;
+            });
         });
       }
     },
@@ -413,6 +436,14 @@ $("#deleteDepartmentForm").submit(function (event) {
       $("#alertMessage").html("<p>Error deleting department!</p>");
     },
   });
+  $("#deleteDepartmentID").empty();
+  $("p").remove(".deleteDepartmentPrompt");
+});
+
+// stop department delete
+$(".stopDepartmentDelete").click(function () {
+  $("#deleteDepartmentID").empty();
+  $("p").remove(".deleteDepartmentPrompt");
 });
 
 // ---- location CRUD functions ---

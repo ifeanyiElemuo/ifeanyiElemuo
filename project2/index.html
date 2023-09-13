@@ -637,7 +637,7 @@
               </h5>
               <button
                 type="button"
-                class="btn-close btn-close-white"
+                class="btn-close btn-close-white stopDepartmentDelete"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -645,8 +645,7 @@
 
             <div class="modal-body">
               <form id="deleteDepartmentForm">
-                <input type="text" id="deleteDepartmentID" />
-                <!-- <p id="deletePersonnelPrompt"></p> -->
+                <input type="hidden" id="deleteDepartmentID" />
               </form>
             </div>
 
@@ -662,7 +661,7 @@
               </button>
               <button
                 type="button"
-                class="btn btn-outline-danger btn-sm myBtn"
+                class="btn btn-outline-danger btn-sm myBtn stopDepartmentDelete"
                 data-bs-dismiss="modal"
               >
                 NO
