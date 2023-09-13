@@ -38,7 +38,7 @@
 
 	$query = $conn->prepare('DELETE FROM personnel WHERE id = ?');
 	
-	$query->bind_param("i", $_REQUEST['id']);
+	$query->bind_param("i", $_POST['personnelID']);
 
 	$query->execute();
 	

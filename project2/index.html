@@ -20,11 +20,13 @@
       <div class="appHeader">
         <div class="row">
           <div class="col">
-            <input
-              id="searchInp"
-              class="form-control mb-3"
-              placeholder="search"
-            />
+            <form id="searchInputForm">
+              <input
+                id="searchInput"
+                class="form-control mb-3"
+                placeholder="search"
+              />
+            </form>
           </div>
 
           <div class="col-6 text-end me-2">
@@ -437,24 +439,31 @@
               <h5 class="modal-title">Delete employee?</h5>
               <button
                 type="button"
-                class="btn-close btn-close-white"
+                class="btn-close btn-close-white stopPersonnelDelete"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
             </div>
 
-            <div id="deletePersonnelResponse" class="modal-body"></div>
+            <div class="modal-body">
+              <form id="deletePersonnelForm">
+                <input type="hidden" id="deletePersonnelID" />
+              </form>
+            </div>
 
             <div class="modal-footer">
               <button
                 type="submit"
+                form="deletePersonnelForm"
                 class="btn btn-outline-success btn-sm myBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#alertModal"
               >
                 YES
               </button>
               <button
                 type="button"
-                class="btn btn-outline-danger btn-sm myBtn"
+                class="btn btn-outline-danger btn-sm myBtn stopPersonnelDelete"
                 data-bs-dismiss="modal"
               >
                 NO
@@ -623,7 +632,9 @@
         >
           <div class="modal-content shadow">
             <div class="modal-header bg-danger bg-gradient text-white">
-              <h5 id="delDeptModalTitle" class="modal-title"></h5>
+              <h5 id="delDeptModalTitle" class="modal-title">
+                Delete department?
+              </h5>
               <button
                 type="button"
                 class="btn-close btn-close-white"
@@ -632,12 +643,17 @@
               ></button>
             </div>
 
-            <div id="deleteDepartmentResponse" class="modal-body"></div>
+            <div class="modal-body">
+              <form id="deleteDepartmentForm">
+                <input type="text" id="deleteDepartmentID" />
+                <!-- <p id="deletePersonnelPrompt"></p> -->
+              </form>
+            </div>
 
             <div id="deleteDeptFooter" class="modal-footer">
               <button
-                id="confirmDelDept"
-                type="button"
+                type="submit"
+                form="deleteDepartmentForm"
                 class="btn btn-outline-success btn-sm myBtn"
                 data-bs-toggle="modal"
                 data-bs-target="#alertModal"
@@ -702,6 +718,8 @@
                 type="submit"
                 form="newLocationForm"
                 class="btn btn-outline-success btn-sm myBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#alertModal"
               >
                 ADD
               </button>
@@ -763,6 +781,8 @@
                 type="submit"
                 form="editLocationForm"
                 class="btn btn-outline-success btn-sm myBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#alertModal"
               >
                 SAVE
               </button>
