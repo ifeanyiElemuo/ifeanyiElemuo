@@ -112,11 +112,11 @@ function getAllPersonnel() {
               person.location +
               "</td><td class='align-middle text-nowrap d-none d-md-table-cell'>" +
               person.email +
-              "</td><td class='text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm editPersonnelBtn' data-bs-toggle='modal' data-bs-target='#editPersonnelModal' data-id='" +
+              "</td><td class='text-end text-nowrap'><button type='button' class='btn btn-info btn-sm editPersonnelBtn' data-bs-toggle='modal' data-bs-target='#editPersonnelModal' data-id='" +
               person.id +
               "' dept-id='" +
               person.departmentID +
-              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deletePersonnelBtn' data-bs-toggle='modal' data-bs-target='#deletePersonnelModal' data-id='" +
+              "'><i class='fa-solid fa-pencil fa-fw'></i></button>&nbsp;<button type='button' class='btn btn-danger btn-sm deletePersonnelBtn' data-bs-toggle='modal' data-bs-target='#deletePersonnelModal' data-id='" +
               person.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
           );
@@ -302,11 +302,11 @@ function getAllDepartments() {
               "<td class='align-middle text-nowrap d-none d-md-table-cell'>" +
               department.location +
               "</td>" +
-              "<td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm editDepartmentBtn' data-bs-toggle='modal' data-bs-target='#editDepartmentModal' data-id='" +
+              "<td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-info btn-sm editDepartmentBtn' data-bs-toggle='modal' data-bs-target='#editDepartmentModal' data-id='" +
               department.id +
               "' location-id='" +
               department.locationID +
-              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deleteDepartmentBtn' data-bs-toggle='modal' data-bs-target='#deleteDepartmentModal' data-id='" +
+              "'><i class='fa-solid fa-pencil fa-fw'></i></button>&nbsp;<button type='button' class='btn btn-danger btn-sm deleteDepartmentBtn' data-bs-toggle='modal' data-bs-target='#deleteDepartmentModal' data-id='" +
               department.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
           );
@@ -479,9 +479,9 @@ function getAllLocations() {
           $("#locationsTable").append(
             "<tr><td class='align-middle text-nowrap'>" +
               location.name +
-              "</td><td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm editLocationBtn' data-bs-toggle='modal' data-bs-target='#editLocationModal' data-id='" +
+              "</td><td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-info btn-sm editLocationBtn' data-bs-toggle='modal' data-bs-target='#editLocationModal' data-id='" +
               location.id +
-              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deleteLocationBtn' data-bs-toggle='modal' data-bs-target='#deleteLocationModal' data-id='" +
+              "'><i class='fa-solid fa-pencil fa-fw'></i></button>&nbsp;<button type='button' class='btn btn-danger btn-sm deleteLocationBtn' data-bs-toggle='modal' data-bs-target='#deleteLocationModal' data-id='" +
               location.id +
               "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
           );
@@ -493,7 +493,7 @@ function getAllLocations() {
           var id = $(this).attr("data-id");
           getLocationByID(id)
             .then((data) => {
-            //   console.log(data);
+              //   console.log(data);
               var location = data[0];
               $("#editLocationID").val(location.id);
               $("#editLocationName").val(location.name);

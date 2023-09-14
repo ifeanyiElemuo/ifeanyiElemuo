@@ -6,9 +6,28 @@
     <title>Company Directory</title>
     <meta
       name="description"
-      content="Company Directory to find employees across locations and departments"
+      content="Find personnel across company locations and departments"
     />
     <meta name="author" content="Ifeanyi Elemuo" />
+
+    <!-- Favicon -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./libs/img/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./libs/img/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./libs/img/favicon/favicon-16x16.png"
+    />
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="./libs/css/bootstrap.min.css" />
@@ -24,18 +43,16 @@
               <input
                 id="searchInput"
                 class="form-control mb-3"
-                placeholder="search"
+                placeholder="search personnel, department, or location"
               />
             </form>
           </div>
 
+          <!-- refresh and add buttons -->
           <div class="col-6 text-end me-2">
             <div class="btn-group" role="group" aria-label="buttons">
               <button id="refreshBtn" type="button" class="btn btn-primary">
                 <i class="fa-solid fa-refresh fa-fw"></i>
-              </button>
-              <button id="filterBtn" type="button" class="btn btn-primary">
-                <i class="fa-solid fa-filter fa-fw"></i>
               </button>
               <button
                 id="addBtn"
@@ -111,13 +128,15 @@
 
         <!-- personnel tab content -->
         <div
-          class="tab-pane show active"
+          class="tab-pane show active table-responsive"
           id="personnel-tab-pane"
           role="tabpanel"
           aria-labelledby="home-tab"
           tabindex="0"
         >
-          <table id="personnelTable" class="table table-hover"></table>
+          <table class="table table-hover">
+            <tbody id="personnelTable"></tbody>
+          </table>
         </div>
 
         <!-- departments tab content -->
@@ -128,7 +147,9 @@
           aria-labelledby="profile-tab"
           tabindex="0"
         >
-          <table id="deptTable" class="table table-hover"></table>
+          <table class="table table-hover">
+            <tbody id="deptTable"></tbody>
+          </table>
         </div>
 
         <!-- locations tab content -->
@@ -139,7 +160,9 @@
           aria-labelledby="contact-tab"
           tabindex="0"
         >
-          <table id="locationsTable" class="table table-hover"></table>
+          <table class="table table-sm">
+            <tbody id="locationsTable"></tbody>
+          </table>
         </div>
       </div>
 
