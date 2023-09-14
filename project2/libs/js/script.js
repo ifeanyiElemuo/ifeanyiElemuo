@@ -125,7 +125,8 @@ function getAllPersonnel() {
         // to edit personnel data
         $(".editPersonnelBtn").click(function () {
           // fills form with selected personnel data
-          getPersonnelByID($(this).attr("data-id"))
+          var id = $(this).attr("data-id");
+          getPersonnelByID(id)
             .then((data) => {
               //   console.log(data);
               var person = data.personnel[0];
@@ -144,13 +145,14 @@ function getAllPersonnel() {
 
         // to delete personnel data
         $(".deletePersonnelBtn").click(function () {
-          getPersonnelByID($(this).attr("data-id"))
+          var id = $(this).attr("data-id");
+          getPersonnelByID(id)
             .then((data) => {
               //   console.log(data);
               var person = data.personnel[0];
               $("#deletePersonnelID").val(person.id);
               $("#deletePersonnelForm").append(
-                "<p class='deletePersonnelPrompt'>Are you sure you want to delete <strong>" +
+                "<p id='deletePersonnelPrompt'>Are you sure you want to delete <strong>" +
                   person.lastName +
                   ", " +
                   person.firstName +
@@ -221,7 +223,7 @@ $("#deletePersonnelForm").submit(function (event) {
       if (status.name === "ok") {
         // console.log(data);
         referesh();
-        $("#alertMessage").html("<p>Personnel deleted!</p>");
+        $("#alertMessage").html("<p>Personnel deleted successfully!</p>");
         clearAlertMessage();
       }
     },
@@ -231,13 +233,7 @@ $("#deletePersonnelForm").submit(function (event) {
     },
   });
   $("#deletePersonnelID").empty();
-  $("p").remove(".deletePersonnelPrompt");
-});
-
-// stop personnel delete
-$(".stopPersonnelDelete").click(function () {
-  $("#deletePersonnelID").empty();
-  $("p").remove(".deletePersonnelPrompt");
+  $("p").remove("#deletePersonnelPrompt");
 });
 
 // ---- department CRUD functions ---
@@ -318,7 +314,8 @@ function getAllDepartments() {
 
         $(".editDepartmentBtn").click(function () {
           // fills form with selected department name
-          getDepartmentByID($(this).attr("data-id"))
+          var id = $(this).attr("data-id");
+          getDepartmentByID(id)
             .then((data) => {
               //   console.log(data);
               var department = data[0];
@@ -337,7 +334,7 @@ function getAllDepartments() {
         $(".deleteDepartmentBtn").click(function () {
           var id = $(this).attr("data-id");
           $.ajax({
-            url: "./libs/php/getDepartmentCountByID.php",
+            url: "./libs/php/getPersonnelCountByID.php",
             type: "GET",
             dataType: "json",
             data: { id },
@@ -346,30 +343,31 @@ function getAllDepartments() {
               if (status.name === "ok") {
                 // console.log(data);
                 var departmentID = data[0].id;
-                var departmentCount = data[0].departmentCount;
+                var personnelCount = data[0].personnelCount;
                 var departmentName = data[0].departmentName;
 
                 $("#deleteDepartmentID").val(departmentID);
 
-                if (departmentCount > 0) {
+                if (personnelCount > 0) {
                   $("#delDeptModalTitle").text("Request denied!");
                   $("#deleteDeptFooter").hide();
                   $("#deleteDepartmentForm").append(
-                    "<p class='deleteDepartmentPrompt'><strong>" +
+                    "<p id='deleteDepartmentPrompt'><strong>" +
                       departmentName +
                       "</strong> has <strong>" +
-                      departmentCount +
+                      personnelCount +
                       "</strong> employee(s) and cannot be deleted!</p>"
                   );
                 } else {
+                  $("#delDeptModalTitle").text("Delete department?");
                   $("#deleteDeptFooter").show();
                   $("#deleteDepartmentForm").append(
-                    "<p class='deleteDepartmentPrompt'>Are you sure you want to delete <strong>" +
+                    "<p id='deleteDepartmentPrompt'>Are you sure you want to delete <strong>" +
                       departmentName +
                       "</strong> from the directory?</p>"
                   );
                 }
-              } else throw new Error("Failed to fetch department count");
+              } else throw new Error("Failed to fetch personnel count");
             })
             .catch((error) => {
               console.log(error);
@@ -427,7 +425,7 @@ $("#deleteDepartmentForm").submit(function (event) {
       if (status.name === "ok") {
         //   console.log(data);
         referesh();
-        $("#alertMessage").html("<p>Department deleted!</p>");
+        $("#alertMessage").html("<p>Department deleted successfully!</p>");
         clearAlertMessage();
       }
     },
@@ -437,13 +435,7 @@ $("#deleteDepartmentForm").submit(function (event) {
     },
   });
   $("#deleteDepartmentID").empty();
-  $("p").remove(".deleteDepartmentPrompt");
-});
-
-// stop department delete
-$(".stopDepartmentDelete").click(function () {
-  $("#deleteDepartmentID").empty();
-  $("p").remove(".deleteDepartmentPrompt");
+  $("p").remove("#deleteDepartmentPrompt");
 });
 
 // ---- location CRUD functions ---
@@ -473,6 +465,116 @@ $("#newLocationForm").submit(function (event) {
   });
 });
 
+// get all locations
+function getAllLocations() {
+  $("#locationsTable").html("");
+  $.ajax({
+    url: "./libs/php/getAllLocations.php",
+    type: "GET",
+    dataType: "json",
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        data.forEach((location) => {
+          $("#locationsTable").append(
+            "<tr><td class='align-middle text-nowrap'>" +
+              location.name +
+              "</td><td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm editLocationBtn' data-bs-toggle='modal' data-bs-target='#editLocationModal' data-id='" +
+              location.id +
+              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deleteLocationBtn' data-bs-toggle='modal' data-bs-target='#deleteLocationModal' data-id='" +
+              location.id +
+              "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
+          );
+        });
+
+        //to edit location
+        $(".editLocationBtn").click(function () {
+          // fills form with selected location name
+          var id = $(this).attr("data-id");
+          getLocationByID(id)
+            .then((data) => {
+            //   console.log(data);
+              var location = data[0];
+              $("#editLocationID").val(location.id);
+              $("#editLocationName").val(location.name);
+            })
+            .catch((error) => {
+              console.log(error.responseText);
+            });
+        });
+
+        // to delete location
+        $(".deleteLocationBtn").click(function () {
+          var id = $(this).attr("data-id");
+          $.ajax({
+            url: "./libs/php/getDepartmentCountByID.php",
+            type: "GET",
+            dataType: "json",
+            data: { id },
+          })
+            .then(({ status, data }) => {
+              if (status.name === "ok") {
+                // console.log(data);
+                var locationID = data[0].id;
+                var departmentCount = data[0].departmentCount;
+                var locationName = data[0].locationName;
+
+                $("#deleteLocationID").val(locationID);
+
+                if (departmentCount > 0) {
+                  $("#deleteLocModalTitle").text("Request denied!");
+                  $("#deleteLocFooter").hide();
+                  $("#deleteLocationForm").append(
+                    "<p id='deleteLocationPrompt'><strong>" +
+                      locationName +
+                      "</strong> has <strong>" +
+                      departmentCount +
+                      "</strong> department(s) and cannot be deleted!</p>"
+                  );
+                } else {
+                  $("#deleteLocModalTitle").text("Delete location?");
+                  $("#deleteLocFooter").show();
+                  $("#deleteLocationForm").append(
+                    "<p id='deleteLocationPrompt'>Are you sure you want to delete <strong>" +
+                      locationName +
+                      "</strong> from the directory?</p>"
+                  );
+                }
+              } else throw new Error("Failed to fetch department count");
+            })
+            .catch((error) => {
+              console.log(error);
+              throw error;
+            });
+        });
+      }
+    },
+    error: function (err) {
+      console.log(err);
+    },
+  });
+}
+
+// get location by ID
+function getLocationByID(id) {
+  return $.ajax({
+    url: "./libs/php/getLocationByID.php",
+    type: "GET",
+    dataType: "json",
+    data: { id },
+  })
+    .then(({ status, data }) => {
+      if (status.name === "ok") {
+        return data;
+      }
+      throw new Error("Failed to fetch location data");
+    })
+    .catch((error) => {
+      console.log(error.responseText);
+      throw error;
+    });
+}
+
 // edit location by ID
 $("#editLocationForm").submit(function (event) {
   event.preventDefault(); // prevents form submitting
@@ -500,56 +602,33 @@ $("#editLocationForm").submit(function (event) {
   });
 });
 
-// get all locations
-function getAllLocations() {
-  $("#locationsTable").html("");
+// delete location by ID
+$("#deleteLocationForm").submit(function (event) {
+  event.preventDefault(); // prevents form submitting
+
+  // get form input
+  var locationID = $("#deleteLocationID").val();
+
   $.ajax({
-    url: "./libs/php/getAllLocations.php",
-    type: "GET",
-    dataType: "json",
-    success: ({ status, data }) => {
+    url: "./libs/php/deleteLocationByID.php",
+    type: "POST",
+    data: { locationID },
+    success: ({ status }) => {
       if (status.name === "ok") {
-        // console.log(data);
-        data.forEach((location) => {
-          $("#locationsTable").append(
-            "<tr><td class='align-middle text-nowrap'>" +
-              location.name +
-              "</td><td class='align-middle text-end text-nowrap'><button type='button' class='btn btn-primary btn-sm editLocationBtn' data-bs-toggle='modal' data-bs-target='#editLocationModal' data-id='" +
-              location.id +
-              "'><i class='fa-solid fa-pencil fa-fw'></i></button><button type='button' class='btn btn-primary btn-sm deleteLocationBtn' data-bs-toggle='modal' data-bs-target='#deleteLocationModal' data-id='" +
-              location.id +
-              "'><i class='fa-solid fa-trash fa-fw'></i></button></td></tr>"
-          );
-        });
-        $(".editLocationBtn").click(function () {
-          // fills form with selected location name
-          getLocationByID($(this).attr("data-id"));
-        });
+        //   console.log(data);
+        referesh();
+        $("#alertMessage").html("<p>Location deleted successfully!</p>");
+        clearAlertMessage();
       }
     },
     error: function (err) {
-      console.log(err);
+      console.log(err.responseText);
+      $("#alertMessage").html("<p>Error deleting location!</p>");
     },
   });
-}
-
-// get location by ID
-function getLocationByID(id) {
-  $.ajax({
-    url: "./libs/php/getLocationByID.php",
-    type: "GET",
-    dataType: "json",
-    data: { id },
-    success: ({ status, data }) => {
-      if (status.name === "ok") {
-        // console.log(data);
-        var location = data[0];
-        $("#editLocationID").val(location.id);
-        $("#editLocationName").val(location.name);
-      }
-    },
-  });
-}
+  $("#deleteLocationID").empty();
+  $("p").remove("#deleteLocationPrompt");
+});
 
 // ------ helper functions ------
 // populate departments dropdowns
@@ -627,6 +706,24 @@ function clearAlertMessage() {
     $("#alertMessage").html("");
   });
 }
+
+// stop action
+$(".stopAction").click(function () {
+  // personnel actions
+  $("#newPersonnelForm")[0].reset();
+  $("#deletePersonnelID").empty();
+  $("p").remove("#deletePersonnelPrompt");
+
+  // department actions
+  $("#newDepartmentForm")[0].reset();
+  $("#deleteDepartmentID").empty();
+  $("p").remove("#deleteDepartmentPrompt");
+
+  // location actions
+  $("#newLocationForm")[0].reset();
+  $("#deleteLocationID").empty();
+  $("p").remove("#deleteLocationPrompt");
+});
 
 // show loading spinner
 function showSpinner() {

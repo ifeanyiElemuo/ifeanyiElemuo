@@ -1,10 +1,11 @@
 <?php
 
 	// example use from browser
-	// http://localhost/companydirectory/libs/php/getDepartmentByID.php?id=<id>
+	// use insertDepartment.php first to create new dummy record and then specify it's id in the command below
+	// http://localhost/companydirectory/libs/php/deleteDepartmentByID.php?id=<id>
 
-	// remove next two lines for production	
-
+	// remove next two lines for production
+	
 	ini_set('display_errors', 'On');
 	error_reporting(E_ALL);
 
@@ -23,11 +24,11 @@
 		$output['status']['description'] = "database unavailable";
 		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
 		$output['data'] = [];
-		
+
 		mysqli_close($conn);
 
 		echo json_encode($output);
-		
+
 		exit;
 
 	}	
@@ -35,9 +36,9 @@
 	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
 	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
 
-	$query = $conn->prepare('SELECT l.id, l.name as locationName, count(d.id) as departmentCount FROM location l LEFT JOIN department d ON (d.locationID = l.id) WHERE l.id = ?');
-
-	$query->bind_param("i", $_REQUEST['id']);
+	$query = $conn->prepare('DELETE FROM location WHERE id = ?');
+	
+	$query->bind_param("i", $_POST['locationID']);
 
 	$query->execute();
 	
@@ -48,20 +49,11 @@
 		$output['status']['description'] = "query failed";	
 		$output['data'] = [];
 
-		echo json_encode($output); 
-	
 		mysqli_close($conn);
+
+		echo json_encode($output); 
+
 		exit;
-
-	}
-
-	$result = $query->get_result();
-
-   	$data = [];
-
-	while ($row = mysqli_fetch_assoc($result)) {
-
-		array_push($data, $row);
 
 	}
 
@@ -69,10 +61,10 @@
 	$output['status']['name'] = "ok";
 	$output['status']['description'] = "success";
 	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data'] = $data;
+	$output['data'] = [];
+	
+	mysqli_close($conn);
 
 	echo json_encode($output); 
-
-	mysqli_close($conn);
 
 ?>
