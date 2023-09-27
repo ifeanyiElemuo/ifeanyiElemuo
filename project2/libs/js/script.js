@@ -1,5 +1,5 @@
 $(window).on("load", () => {
-  referesh();
+  loadData();
 });
 
 $(document).ready(function () {
@@ -11,11 +11,13 @@ $(document).ready(function () {
 
   $("#departmentsBtn").click(() => {
     $("#searchInputForm")[0].reset();
+    $("#departmentBtn").addClass("active");
     getAllDepartments();
   });
 
   $("#locationsBtn").click(() => {
     $("#searchInputForm")[0].reset();
+    $("#locationBtn").addClass("active");
     getAllLocations();
   });
 
@@ -35,7 +37,32 @@ $(document).ready(function () {
 
   // referesh directory
   $("#refreshBtn").click(() => {
-    referesh();
+    if ($("#personnelBtn").hasClass("active")) {
+      getAllPersonnel();
+    } else {
+      if ($("#departmentsBtn").hasClass("active")) {
+        getAllDepartments();
+      } else {
+        if ($("#locationsBtn").hasClass("active")) {
+          getAllLocations();
+        }
+      }
+    }
+  });
+
+  // add button
+  $("#addBtn").click(() => {
+    if ($("#personnelBtn").hasClass("active")) {
+      $("#addPersonnelModal").modal("show");
+    } else {
+      if ($("#departmentsBtn").hasClass("active")) {
+        $("#addDepartmentModal").modal("show");
+      } else {
+        if ($("#locationsBtn").hasClass("active")) {
+          $("#addLocationModal").modal("show");
+        }
+      }
+    }
   });
 });
 
@@ -57,15 +84,18 @@ $("#newPersonnelForm").submit(function (e) {
     data: { firstName, lastName, jobTitle, email, departmentID },
     success: ({ status }) => {
       if (status.name === "ok") {
-        referesh();
-        $("#alertMessage").html("<p>New personnel added!</p>");
+        $("#addPersonnelModal").modal("hide");
         $("#newPersonnelForm")[0].reset();
+        getAllPersonnel();
+      } else {
+        $("#alertModal").modal("show");
+        $("#alertMessage").html("<p>Error adding new personnel!</p>");
         clearAlertMessage();
       }
     },
     error: function (err) {
       console.log(err.responseText);
-      $("#alertMessage").html("<p>Error adding new personnel!</p>");
+      throw err;
     },
   });
 });
@@ -189,12 +219,16 @@ $("#editPersonnelForm").submit(function (e) {
     },
     success: ({ status }) => {
       if (status.name === "ok") {
-        referesh();
+        $("#editPersonnelModal").modal("hide");
+      } else {
+        $("#alertModal").modal("show");
+        $("#alertMessage").html("<p>Error updating personnel data!</p>");
+        clearAlertMessage();
       }
     },
     error: function (err) {
       console.log(err.responseText);
-      $("#alertMessage").html("<p>Error updating personnel data!</p>");
+      throw err;
     },
   });
 });
@@ -232,14 +266,17 @@ $("#deletePersonnelForm").submit(function (e) {
     success: ({ status }) => {
       if (status.name === "ok") {
         // console.log(data);
-        referesh();
-        $("#alertMessage").html("<p>Personnel deleted successfully!</p>");
+        $("#deletePersonnelModal").modal("hide");
+        getAllPersonnel();
+      } else {
+        $("#alertModal").modal("show");
+        $("#alertMessage").html("<p>Personnel delete failed!</p>");
         clearAlertMessage();
       }
     },
     error: function (err) {
       console.log(err.responseText);
-      $("#alertMessage").html("<p>Error deleting personnel!</p>");
+      throw err;
     },
   });
   $("#deletePersonnelID").empty();
@@ -261,15 +298,19 @@ $("#newDepartmentForm").submit(function (e) {
     data: { name, locationID },
     success: ({ status }) => {
       if (status.name === "ok") {
-        referesh();
-        $("#alertMessage").html("<p>New department added!</p>");
+        $("#addDepartmentModal").modal("hide");
         $("#newDepartmentForm")[0].reset();
+        getAllDepartments();
+        
+      } else {
+        $("#alertModal").modal("show");
+        $("#alertMessage").html("<p>Error adding new department!</p>");
         clearAlertMessage();
       }
     },
     error: function (err) {
       console.log(err);
-      $("#alertMessage").html("<p>Error adding new department!</p>");
+      throw err;
     },
   });
 });
@@ -333,7 +374,7 @@ $("#editDepartmentModal").on("show.bs.modal", function (e) {
   var id = $(e.relatedTarget).attr("data-id");
   getDepartmentByID(id)
     .then((data) => {
-        // console.log(data);
+      // console.log(data);
       var department = data.department[0];
       $("#editDepartmentID").val(department.id);
       $("#editDepartmentName").val(department.name);
@@ -360,8 +401,8 @@ $("#editDepartmentModal").on("show.bs.modal", function (e) {
 });
 
 // edit department by ID
-$("#editDepartmentForm").submit(function (event) {
-  event.preventDefault(); // prevents form submitting
+$("#editDepartmentForm").submit(function (e) {
+  e.preventDefault(); // prevents form submitting
 
   // get form inputs
   var departmentID = $("#editDepartmentID").val();
@@ -374,12 +415,17 @@ $("#editDepartmentForm").submit(function (event) {
     data: { departmentID, departmentName, locationID },
     success: ({ status }) => {
       if (status.name === "ok") {
-        referesh();
+        $("#editDepartmentModal").modal('hide');
+        getAllDepartments();
+      } else {
+        $("#alert").modal('show');
+        $("#alertMessage").html("<p>Error updating department data!</p>");
+        clearAlertMessage();
       }
     },
     error: function (err) {
       console.log(err.responseText);
-      $("#alertMessage").html("<p>Error updating department data!</p>");
+      throw err;
     },
   });
 });
@@ -444,14 +490,17 @@ $("#deleteDepartmentForm").submit(function (e) {
     success: ({ status }) => {
       if (status.name === "ok") {
         //   console.log(data);
-        referesh();
-        $("#alertMessage").html("<p>Department deleted successfully!</p>");
+        $("#deleteDepartmentModal").modal('hide');
+        getAllDepartments();
+      } else {
+        $("#alert").modal('show');
+        $("#alertMessage").html("<p> Error deleting department!</p>");
         clearAlertMessage();
       }
     },
     error: function (err) {
       console.log(err.responseText);
-      $("#alertMessage").html("<p>Error deleting department!</p>");
+      throw err;
     },
   });
   $("#deleteDepartmentID").empty();
@@ -472,15 +521,18 @@ $("#newLocationForm").submit(function (e) {
     data: { name },
     success: ({ status }) => {
       if (status.name === "ok") {
-        referesh();
-        $("#alertMessage").html("<p>New location added!</p>");
+        $("#addLocationModal").modal('hide');
         $("#newLocationForm")[0].reset();
+        getAllLocations();
+      } else {
+        $("#alert").modal('show');
+        $("#alertMessage").html("<p>Error adding new location!</p>");
         clearAlertMessage();
       }
     },
     error: function (err) {
       console.log(err.responseText);
-      $("#alertMessage").html("<p>Error adding new location!</p>");
+      throw err;
     },
   });
 });
@@ -564,12 +616,17 @@ $("#editLocationForm").submit(function (e) {
     data: { locationID, locationName },
     success: ({ status }) => {
       if (status.name === "ok") {
-        referesh();
+        $("#editLocationModal").modal('hide');
+        getAllLocations();
+      } else {
+        $("#alert").modal('show');
+        $("#alertMessage").html("<p>Error updating location data!</p>");
+        clearAlertMessage();
       }
     },
     error: function (err) {
       console.log(err.responseText);
-      $("#alertMessage").html("<p>Error updating location data!</p>");
+      throw err;
     },
   });
 });
@@ -633,8 +690,12 @@ $("#deleteLocationForm").submit(function (e) {
     success: ({ status }) => {
       if (status.name === "ok") {
         //   console.log(data);
-        referesh();
-        $("#alertMessage").html("<p>Location deleted successfully!</p>");
+        $("#deleteLocationModal").modal('hide');
+        getAllLocations();
+       
+      } else {
+        $("#alertModal").modal("show");
+        $("#alertMessage").html("<p>Error deleting location!</p>");
         clearAlertMessage();
       }
     },
@@ -697,7 +758,7 @@ function populateLocationsDropdown() {
 }
 
 // referesh table contents
-function referesh() {
+function loadData() {
   getAllPersonnel();
   getAllDepartments();
   getAllLocations();

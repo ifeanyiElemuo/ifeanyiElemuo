@@ -36,6 +36,9 @@
 
   <body>
     <section>
+      <header class="border-top">
+        <p class="h1 my-3">Company Directory</p>
+      </header>
       <div class="appHeader">
         <div class="row">
           <div class="col">
@@ -58,8 +61,6 @@
                 id="addBtn"
                 type="button"
                 class="btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#addNewModal"
               >
                 <i class="fa-solid fa-plus fa-fw"></i>
               </button>
@@ -166,75 +167,9 @@
         </div>
       </div>
 
-      <footer class="border-top text-center fw-bold">
+      <footer class="border-top mb-1 text-center fw-bold">
         <p class="fw-light my-3">Company Directory version 1.0</p>
       </footer>
-
-      <!-- add new modal -->
-      <div
-        id="addNewModal"
-        class="modal fade"
-        tabindex="-1"
-        data-bs-backdrop="false"
-        data-bs-keyboard="false"
-        aria-labelledby="addNewModalLabel"
-        aria-hidden="true"
-      >
-        <div
-          class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
-        >
-          <div class="modal-content shadow">
-            <div class="modal-header bg-secondary bg-gradient text-white">
-              <h5 class="modal-title">Add new</h5>
-              <button
-                type="button"
-                class="btn-close btn-close-white"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-
-            <div class="modal-body">
-              <div id="buttonContainer" class="d-grid gap-3">
-                <button
-                  class="btn btn-success"
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#addPersonnelModal"
-                >
-                  Personnel
-                </button>
-                <button
-                  class="btn btn-success"
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#addDepartmentModal"
-                >
-                  Department
-                </button>
-                <button
-                  class="btn btn-success"
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#addLocationModal"
-                >
-                  Location
-                </button>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-outline-danger btn-sm myBtn"
-                data-bs-dismiss="modal"
-              >
-                CANCEL
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- add new personnel modal -->
       <div
@@ -323,8 +258,6 @@
                 type="submit"
                 form="newPersonnelForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-toggle="modal"
-                data-bs-target="#alertModal"
               >
                 ADD
               </button>
@@ -427,7 +360,6 @@
                 type="submit"
                 form="editPersonnelForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-dismiss="modal"
               >
                 SAVE
               </button>
@@ -478,8 +410,6 @@
                 type="submit"
                 form="deletePersonnelForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-toggle="modal"
-                data-bs-target="#alertModal"
               >
                 YES
               </button>
@@ -550,8 +480,6 @@
                 type="submit"
                 form="newDepartmentForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-toggle="modal"
-                data-bs-target="#alertModal"
               >
                 ADD
               </button>
@@ -622,7 +550,6 @@
                 type="submit"
                 form="editDepartmentForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-dismiss="modal"
               >
                 SAVE
               </button>
@@ -673,8 +600,6 @@
                 type="submit"
                 form="deleteDepartmentForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-toggle="modal"
-                data-bs-target="#alertModal"
               >
                 YES
               </button>
@@ -736,8 +661,6 @@
                 type="submit"
                 form="newLocationForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-toggle="modal"
-                data-bs-target="#alertModal"
               >
                 ADD
               </button>
@@ -799,7 +722,6 @@
                 type="submit"
                 form="editLocationForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-dismiss="modal"
               >
                 SAVE
               </button>
@@ -850,8 +772,6 @@
                 type="submit"
                 form="deleteLocationForm"
                 class="btn btn-outline-success btn-sm myBtn"
-                data-bs-toggle="modal"
-                data-bs-target="#alertModal"
               >
                 YES
               </button>
@@ -881,8 +801,8 @@
           class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable"
         >
           <div class="modal-content shadow">
-            <div class="modal-header bg-success bg-gradient text-white">
-              <h5 class="modal-title">Alert</h5>
+            <div class="modal-header">
+              <h5 class="modal-title">Alert!</h5>
               <button
                 type="button"
                 class="btn-close btn-close-white"
