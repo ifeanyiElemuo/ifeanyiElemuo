@@ -48,6 +48,7 @@ $(document).ready(function () {
         }
       }
     }
+    $("#searchInputForm")[0].reset();
   });
 
   // add button
