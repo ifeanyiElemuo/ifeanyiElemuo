@@ -68,6 +68,35 @@ $(document).ready(function () {
 });
 
 // ---- personnel CRUD functions ---
+// to add new personnel
+$("#addPersonnelModal").on("show.bs.modal", function () {
+  $.ajax({
+    url: "./libs/php/getAllDepartments.php",
+    type: "GET",
+    dataType: "json",
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        // clear dropdown data
+        $("#newPersonnelDepartment").html("");
+        //rebuild dropdown data
+        data.forEach((department) => {
+          $("#newPersonnelDepartment").append(
+            "<option value='" +
+              department.id +
+              "'>" +
+              department.name +
+              "</option>"
+          );
+        });
+      }
+    },
+    error: function (err) {
+      console.log(err);
+    },
+  });
+});
+
 // add new personnel
 $("#newPersonnelForm").submit(function (e) {
   e.preventDefault(); // prevents form submitting
@@ -285,6 +314,31 @@ $("#deletePersonnelForm").submit(function (e) {
 });
 
 // ---- department CRUD functions ---
+// to add new department
+$("#addDepartmentModal").on("show.bs.modal", function () {
+  $.ajax({
+    url: "./libs/php/getAllLocations.php",
+    type: "GET",
+    dataType: "json",
+    success: ({ status, data }) => {
+      if (status.name === "ok") {
+        // console.log(data);
+        // clear dropdown data
+        $("#newDepartmentLocation").html("");
+        // rebuild dropdown data
+        data.forEach((location) => {
+          $("#newDepartmentLocation").append(
+            "<option value='" + location.id + "'>" + location.name + "</option>"
+          );
+        });
+      }
+    },
+    error: function (err) {
+      console.log(err);
+    },
+  });
+});
+
 // add new department
 $("#newDepartmentForm").submit(function (e) {
   e.preventDefault(); // prevents form submitting
@@ -302,7 +356,6 @@ $("#newDepartmentForm").submit(function (e) {
         $("#addDepartmentModal").modal("hide");
         $("#newDepartmentForm")[0].reset();
         getAllDepartments();
-        
       } else {
         $("#alertModal").modal("show");
         $("#alertMessage").html("<p>Error adding new department!</p>");
@@ -416,10 +469,10 @@ $("#editDepartmentForm").submit(function (e) {
     data: { departmentID, departmentName, locationID },
     success: ({ status }) => {
       if (status.name === "ok") {
-        $("#editDepartmentModal").modal('hide');
+        $("#editDepartmentModal").modal("hide");
         getAllDepartments();
       } else {
-        $("#alert").modal('show');
+        $("#alert").modal("show");
         $("#alertMessage").html("<p>Error updating department data!</p>");
         clearAlertMessage();
       }
@@ -491,10 +544,10 @@ $("#deleteDepartmentForm").submit(function (e) {
     success: ({ status }) => {
       if (status.name === "ok") {
         //   console.log(data);
-        $("#deleteDepartmentModal").modal('hide');
+        $("#deleteDepartmentModal").modal("hide");
         getAllDepartments();
       } else {
-        $("#alert").modal('show');
+        $("#alert").modal("show");
         $("#alertMessage").html("<p> Error deleting department!</p>");
         clearAlertMessage();
       }
@@ -522,11 +575,11 @@ $("#newLocationForm").submit(function (e) {
     data: { name },
     success: ({ status }) => {
       if (status.name === "ok") {
-        $("#addLocationModal").modal('hide');
+        $("#addLocationModal").modal("hide");
         $("#newLocationForm")[0].reset();
         getAllLocations();
       } else {
-        $("#alert").modal('show');
+        $("#alert").modal("show");
         $("#alertMessage").html("<p>Error adding new location!</p>");
         clearAlertMessage();
       }
@@ -617,10 +670,10 @@ $("#editLocationForm").submit(function (e) {
     data: { locationID, locationName },
     success: ({ status }) => {
       if (status.name === "ok") {
-        $("#editLocationModal").modal('hide');
+        $("#editLocationModal").modal("hide");
         getAllLocations();
       } else {
-        $("#alert").modal('show');
+        $("#alert").modal("show");
         $("#alertMessage").html("<p>Error updating location data!</p>");
         clearAlertMessage();
       }
@@ -691,9 +744,8 @@ $("#deleteLocationForm").submit(function (e) {
     success: ({ status }) => {
       if (status.name === "ok") {
         //   console.log(data);
-        $("#deleteLocationModal").modal('hide');
+        $("#deleteLocationModal").modal("hide");
         getAllLocations();
-       
       } else {
         $("#alertModal").modal("show");
         $("#alertMessage").html("<p>Error deleting location!</p>");
@@ -710,61 +762,11 @@ $("#deleteLocationForm").submit(function (e) {
 });
 
 // ------ helper functions ------
-// populate departments dropdowns
-function populateDeptDropdown() {
-  $.ajax({
-    url: "./libs/php/getAllDepartments.php",
-    type: "GET",
-    dataType: "json",
-    success: ({ status, data }) => {
-      if (status.name === "ok") {
-        // console.log(data);
-        data.forEach((department) => {
-          $("#newPersonnelDepartment").append(
-            "<option value='" +
-              department.id +
-              "'>" +
-              department.name +
-              "</option>"
-          );
-        });
-      }
-    },
-    error: function (err) {
-      console.log(err);
-    },
-  });
-}
-
-// populate locations dropdown
-function populateLocationsDropdown() {
-  $.ajax({
-    url: "./libs/php/getAllLocations.php",
-    type: "GET",
-    dataType: "json",
-    success: ({ status, data }) => {
-      if (status.name === "ok") {
-        // console.log(data);
-        data.forEach((location) => {
-          $("#newDepartmentLocation").append(
-            "<option value='" + location.id + "'>" + location.name + "</option>"
-          );
-        });
-      }
-    },
-    error: function (err) {
-      console.log(err);
-    },
-  });
-}
-
-// referesh table contents
+// load table contents
 function loadData() {
   getAllPersonnel();
   getAllDepartments();
   getAllLocations();
-  populateDeptDropdown();
-  populateLocationsDropdown();
 }
 
 // clear alert message
