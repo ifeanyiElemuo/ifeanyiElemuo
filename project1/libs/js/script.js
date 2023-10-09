@@ -18,12 +18,9 @@ var basemaps = {
   Satellite: satellite,
 };
 
-const map = L.map("map", {
-  preferCanvas: true,
-  updateWhenZooming: false,
-  updateWhenIdle: true,
+var map = L.map("map", {
   layers: [streets],
-}).fitWorld();
+}).setView([51.505, -0.09], 13);
 
 // markers
 var airports = L.markerClusterGroup({
